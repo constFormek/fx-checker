@@ -1,9 +1,11 @@
-export default function Home() {
+import Converter from "@/components/Converter";
+
+export default async function Home() {
   return (
-    <div className="flex flex-col bg-neutral-900 w-screen h-screen overflow-hidden items-center justify-center">
+    <div className="flex flex-col bg-neutral-900 font-jetbrains-mono w-screen h-screen overflow-hidden items-center justify-center">
       <h1 className="font-jetbrains-mono">CHECK THE RATE</h1>
 
-      <div className="flex flex-col divide-y-2 divide-dotted "></div>
+      <Converter />
     </div>
   );
 }
