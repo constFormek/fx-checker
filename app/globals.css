@@ -122,7 +122,7 @@
   letter-spacing: 0px;
 }
 
-@media (width > 768px) and (width < 1280px) { 
+@media (width < 1280px) { 
   .text-preset-1 {
     font-size: 32px;
     line-height: 100%;
@@ -140,5 +140,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jetbrains-mono), Arial, Helvetica, sans-serif;
 }
