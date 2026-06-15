@@ -91,6 +91,12 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 
 ## My process
 
+The first thing i had to do was to clean up the default file structure and get rid of boiler plate code. After that i created variables from the figma file.
+Then came the part of creating a two-way converter, because i felt that it gives user better experience if he doesn't have to click the switch button 
+to convert back from the other currency. I struggled a lot with this part, not sure why but i came across many weird small errors and i felt overwhelmed. I used AI to guide
+me and kind of explain what was I doing wrong and it told me what to consider and the rest after that kind of clicked.
+
+
 ### Built with
 
 - React.js
