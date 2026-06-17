@@ -5,14 +5,16 @@ export type inputVariant = "send" | "receive";
 interface CurrencyInputProps {
   amount: string;
   currency: string;
-  variant: inputVariant
+  variant: inputVariant;
   handleNewAmount: (variant: inputVariant, newAmount: string) => void;
+  activeInput: inputVariant;
 }
 const CurrencyInput = ({
   amount,
   currency,
   variant,
   handleNewAmount,
+  activeInput,
 }: CurrencyInputProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
@@ -28,6 +30,9 @@ const CurrencyInput = ({
     }
   };
 
+  const newAmount =
+    activeInput === variant ? amount : Number(amount).toFixed(2);
+
   return (
     <div className="flex flex-col justify-between border rounded-16 gap-5 border-neutral-500 bg-neutral-600  p-4 w-full">
       <p className="text-neutral-100 text-preset-4 uppercase">
@@ -38,9 +43,9 @@ const CurrencyInput = ({
         <input
           className={`${variant === "receive" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} text-preset-1 font-bold`}
           type="text"
-          placeholder={amount}
+          placeholder={newAmount}
           onChange={(e) => handleChange(e)}
-          value={amount}
+          value={newAmount}
         />
 
         <p>{currency}</p>
