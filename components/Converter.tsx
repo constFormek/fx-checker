@@ -11,8 +11,8 @@ const Converter = () => {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [sendCurrency, setSendCurrency] = useState("PLN");
-  const [receiveCurrency, setReceivedCurrency] = useState("USD");
+  const [sendCurrency, setSendCurrency] = useState("USD");
+  const [receiveCurrency, setReceivedCurrency] = useState("PLN");
   const [exchangeRate, setExchangeRate] = useState<number>(0);
   const [amount, setAmount] = useState<string>("0");
   const [activeInput, setActiveInput] = useState<inputVariant>("receive");
@@ -20,6 +20,16 @@ const Converter = () => {
   const handleNewAmount = (variant: "send" | "receive", newAmount: string) => {
     setActiveInput(variant);
     setAmount(newAmount);
+  };
+
+  const swapCurrencies = () => {
+    setAmount(Number(receiveValue).toFixed(2));
+
+    setActiveInput("send");
+
+    const temp = sendCurrency;
+    setSendCurrency(receiveCurrency);
+    setReceivedCurrency(temp);
   };
 
   useEffect(() => {
@@ -57,9 +67,13 @@ const Converter = () => {
             currency={sendCurrency}
             handleNewAmount={handleNewAmount}
             variant="send"
+            activeInput={activeInput}
           />
 
-          <button className="p-3.25  rounded-8 bg-neutral-600 border border-neutral-500 w-fit">
+          <button
+            onClick={swapCurrencies}
+            className="p-3.25  rounded-8 bg-neutral-600 border border-neutral-500 w-fit"
+          >
             <Image src={swapIcon} alt="" width={20} />
           </button>
 
@@ -68,6 +82,7 @@ const Converter = () => {
             currency={receiveCurrency}
             handleNewAmount={handleNewAmount}
             variant="receive"
+            activeInput={activeInput}
           />
         </div>
       </div>
