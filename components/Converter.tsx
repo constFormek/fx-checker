@@ -1,11 +1,10 @@
 "use client";
 
 import { response } from "@/lib/fetchExchangeRate";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import swapIcon from "@/public/images/icon-exchange-vertical.svg";
 import CurrencyInput, { inputVariant } from "./CurrencyInput";
+import Icon from "./Icon";
 
 const Converter = () => {
   const [error, setError] = useState<string>("");
@@ -60,8 +59,8 @@ const Converter = () => {
       : amount;
   return (
     <div className="flex flex-col gap-4 w-full p-4">
-      <div className="bg-neutral-700 flex flex-col divide-y-2 divide-dashed rounded-16 p-4 w-full">
-        <div className="flex flex-col items-center gap-4">
+      <div className="bg-neutral-700 flex flex-col divide-y-2 divide-dashed divide-neutral-500 rounded-16 p-4 w-full">
+        <div className="flex flex-col items-center gap-4 p-4">
           <CurrencyInput
             amount={sendValue}
             currency={sendCurrency}
@@ -74,7 +73,11 @@ const Converter = () => {
             onClick={swapCurrencies}
             className="p-3.25  rounded-8 bg-neutral-600 border border-neutral-500 w-fit"
           >
-            <Image src={swapIcon} alt="" width={20} />
+            <Icon
+              name="exchange-vertical"
+              size={20}
+              className="text-neutral-50"
+            />
           </button>
 
           <CurrencyInput
@@ -84,6 +87,24 @@ const Converter = () => {
             variant="receive"
             activeInput={activeInput}
           />
+        </div>
+
+        <div className="flex flex-col p-4 gap-4">
+          <p className="text-preset-6 text-center">
+            1 {sendCurrency.toUpperCase()} = {exchangeRate}{" "}
+            {receiveCurrency.toUpperCase()}
+          </p>
+
+          <div className="flex items-center gap-2">
+            <button className="flex items-center rounded-8 bg-neutral-600 border-2 uppercase border-neutral-300 text-neutral-200 gap-2 p-3 w-fit ">
+              <Icon name="star" size={16} />
+              Favorite
+            </button>
+
+            <button className="flex text-nowrap items-center rounded-8 border-2 uppercase border-neutral-300 text-neutral-200 gap-2 p-3 w-fit ">
+              Log conversion
+            </button>
+          </div>
         </div>
       </div>
     </div>
