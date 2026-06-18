@@ -39,9 +39,11 @@ const CurrencyInput = ({
         {variant === "send" ? "Send" : "Receive"}
       </p>
 
-      <div className="w-full flex justify-between">
+      <div className="w-full flex justify-between items-center">
         <input
-          className={`${variant === "receive" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} text-preset-1 font-bold`}
+          className={`${variant === "receive" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} '
+          w-7/10 max-w-7/10 outline-none text-preset-1 font-bold
+          `}
           type="text"
           placeholder={newAmount}
           onChange={(e) => handleChange(e)}
