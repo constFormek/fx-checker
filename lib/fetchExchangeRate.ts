@@ -1,10 +1,9 @@
 interface fetchExchangeRateProps {
   base: string; // type of the possible currencies
   symbol: string;
-  amount: number;
 }
 
-export type response = {
+export type exchangeObject = {
   amount: number;
   base: string;
   date: string;
@@ -15,13 +14,11 @@ export type response = {
 export const fetchExchangeRate = async ({
   base,
   symbol,
-  amount,
-}: fetchExchangeRateProps): Promise<response> => {
+}: fetchExchangeRateProps): Promise<exchangeObject> => {
   try {
     const data = await fetch(
-      `https://api.frankfurter.dev/v1/latest?amount=${amount}&base=${base}&symbols=${symbol}`,
+      `https://api.frankfurter.dev/v1/latest?amount=${1}&base=${base}&symbols=${symbol}`,
     );
-
 
     if (!data.ok) {
       throw new Error("idk but something went wrong probably with them");
