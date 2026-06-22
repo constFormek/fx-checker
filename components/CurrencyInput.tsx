@@ -30,9 +30,10 @@ const CurrencyInput = ({
     }
   };
 
-  const newAmount =
+  let newAmount =
     activeInput === variant ? amount : Number(amount).toFixed(2);
 
+    if (newAmount === "0.00") newAmount = "0";
   return (
     <div className="flex flex-col justify-between border rounded-16 gap-5 border-neutral-500 bg-neutral-600  p-4 w-full">
       <p className="text-neutral-100 text-preset-4 uppercase">
