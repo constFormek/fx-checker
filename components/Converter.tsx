@@ -1,18 +1,24 @@
 "use client";
 
-import { response } from "@/lib/fetchExchangeRate";
+import { exchangeObject } from "@/lib/fetchExchangeRate";
 import { useEffect, useState } from "react";
 
 import CurrencyInput, { inputVariant } from "./CurrencyInput";
 import Icon from "./Icon";
 
-const Converter = () => {
+interface ConverterProps {
+  symbol: string;
+  initialExchangeRate: number;
+  base: string;
+}
+
+const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [sendCurrency, setSendCurrency] = useState("USD");
-  const [receiveCurrency, setReceivedCurrency] = useState("PLN");
-  const [exchangeRate, setExchangeRate] = useState<number>(0);
+  const [sendCurrency, setSendCurrency] = useState(base);
+  const [receiveCurrency, setReceivedCurrency] = useState(symbol);
+  const [exchangeRate, setExchangeRate] = useState<number>(initialExchangeRate);
   const [amount, setAmount] = useState<string>("0");
   const [activeInput, setActiveInput] = useState<inputVariant>("receive");
 
@@ -38,7 +44,7 @@ const Converter = () => {
           `https://api.frankfurter.dev/v1/latest?amount=1&base=${sendCurrency}&symbols=${receiveCurrency}`,
         );
 
-        const json: response = await data.json();
+        const json: exchangeObject = await data.json();
         setExchangeRate(json.rates[receiveCurrency]);
       } catch (error) {
         if (error instanceof Error) setError(error.message);
