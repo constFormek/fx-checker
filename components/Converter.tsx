@@ -1,6 +1,6 @@
 "use client";
 
-import { exchangeObject } from "@/lib/fetchExchangeRate";
+import { ExchangeObject } from "@/lib/currencyApi";
 import { useEffect, useState } from "react";
 
 import CurrencyInput, { inputVariant } from "./CurrencyInput";
@@ -44,7 +44,7 @@ const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
           `https://api.frankfurter.dev/v1/latest?amount=1&base=${sendCurrency}&symbols=${receiveCurrency}`,
         );
 
-        const json: exchangeObject = await data.json();
+        const json: ExchangeObject = await data.json();
         setExchangeRate(json.rates[receiveCurrency]);
       } catch (error) {
         if (error instanceof Error) setError(error.message);
