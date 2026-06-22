@@ -1,5 +1,5 @@
 import Converter from "@/components/Converter";
-import { fetchExchangeRate } from "@/lib/fetchExchangeRate";
+import { fetchCurrenciesData, fetchExchangeRate } from "@/lib/currencyApi";
 
 export default async function Home() {
   const base = "USD";
@@ -8,6 +8,9 @@ export default async function Home() {
     base: base,
     symbol: symbol,
   });
+
+  const currenciesData = await fetchCurrenciesData();
+
   return (
     <div className="flex flex-col bg-neutral-900 font-jetbrains-mono w-screen h-screen overflow-hidden items-center justify-center">
       <h1 className="font-jetbrains-mono">CHECK THE RATE</h1>
