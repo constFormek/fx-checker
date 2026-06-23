@@ -4,7 +4,7 @@ This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.
 
 ## Table of contents
 
-- [Overview](#overview)
+
   - [The challenge](#the-challenge)
   - [Screenshot](#screenshot)
   - [Links](#links)
@@ -19,7 +19,7 @@ This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.
 
 **Note: Delete this note and update the table of contents based on what sections you keep.**
 
-## Overview
+
 
 ### The challenge
 
@@ -91,10 +91,17 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 
 ## My process
 
-The first thing i had to do was to clean up the default file structure and get rid of boiler plate code. After that i created variables from the figma file.
+The first thing i had to do was to clean up the default file structure and get rid of boiler plate code. 
+After that i created css variables from the figma file.
 Then came the part of creating a two-way converter, because i felt that it gives user better experience if he doesn't have to click the switch button 
-to convert back from the other currency. I struggled a lot with this part, not sure why but i came across many weird small errors and i felt overwhelmed. I used AI to guide
+to convert back from the other currency. 
+I struggled a lot with this part, not sure why but i came across many weird small errors and i felt overwhelmed. I used AI to guide
 me and kind of explain what was I doing wrong and it told me what to consider and the rest after that kind of clicked.
+So i didn't knew at the beginning that the both way conversion from the inputs was required, but i looked up closely at the design and found this out.
+I built the rest of the converter ui, besides the currency picker, i have built the swap button and made it work, with slight issues with the roundings which
+kind of drives me crazy, but i will try to fix those issues if I won't run out of time. I do feel a little bit overwhelmed because i have started many features inside
+the converter alone but none of them is 100% finished, i still need to make it responsive, finish the picker, add local storage, etc. I'm slowly making progress but i get stuck
+a lot of times. 
 
 
 ### Built with
@@ -104,11 +111,14 @@ me and kind of explain what was I doing wrong and it told me what to consider an
 - Typescript
 - Tailwind CSS
 - Mobile-first workflow
+- Zustand
 - [React](https://reactjs.org/) - JS library
 - [Next.js](https://nextjs.org/) - React framework
 
 
 ### What I learned
+
+generic type, server and client fetching differences
 
 Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
 
@@ -139,7 +149,7 @@ Use this section to outline areas that you want to continue focusing on in futur
 **Note: Delete this note and the content within this section and replace with your own plans for continued development.**
 
 ### Useful resources
-
+zustand docs, frankfurter docs
 - [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
 - [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
 
@@ -153,6 +163,9 @@ Describe how you used AI tools (if any) during this project. This helps demonstr
 - How did you use them (e.g., debugging, generating boilerplate, brainstorming solutions)?
 - What worked well? What didn't?
 
+I worked with Claude, i used it for learning and to help me understand different concepts, it showed me pros and cons of different approaches,
+
+examples
 **Note: Delete this note and the content above if you didn't use AI, or replace with your own experience.**
 
 ## Author
