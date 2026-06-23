@@ -1,28 +1,26 @@
 import { fetchHelper } from "./fetchHelper";
 
 interface fetchExchangeRateProps {
-  base: string; // type of the possible currencies
-  symbol: string;
+  base: string;
+  quote: string;
 }
 
 export type ExchangeObject = {
-  amount: number;
-  base: string;
   date: string;
-  rates: {
-    [key: string]: number;
-  };
+  base: string;
+  quote: string;
+  rate: number;
 };
-export const fetchExchangeRate = ({ base, symbol }: fetchExchangeRateProps) => {
-  const url = `https://api.frankfurter.dev/v1/latest?amount=${1}&base=${base}&symbols=${symbol}`;
+export const fetchExchangeRate = ({ base, quote }: fetchExchangeRateProps) => {
+  const url = `https://api.frankfurter.dev/v2/rate/${base}/${quote}`;
 
   return fetchHelper<ExchangeObject>(url);
 };
 
-type CurrencyEntry = {
+export type CurrencyEntry = {
   iso_code: string;
-  iso_numeric: string;
   name: string;
+  flag: string;
 };
 
 export const fetchCurrenciesData = () => {
