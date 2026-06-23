@@ -1,5 +1,7 @@
 "use client";
 
+import CurrencySelector from "./CurrencySelector";
+
 export type inputVariant = "send" | "receive";
 
 interface CurrencyInputProps {
@@ -7,6 +9,7 @@ interface CurrencyInputProps {
   currency: string;
   variant: inputVariant;
   handleNewAmount: (variant: inputVariant, newAmount: string) => void;
+  onCurrencyChange: (code: string) => void;
   activeInput: inputVariant;
 }
 const CurrencyInput = ({
@@ -14,6 +17,7 @@ const CurrencyInput = ({
   currency,
   variant,
   handleNewAmount,
+  onCurrencyChange,
   activeInput,
 }: CurrencyInputProps) => {
   const handleChange = (
@@ -30,17 +34,16 @@ const CurrencyInput = ({
     }
   };
 
-  let newAmount =
-    activeInput === variant ? amount : Number(amount).toFixed(2);
+  let newAmount = activeInput === variant ? amount : Number(amount).toFixed(2);
 
-    if (newAmount === "0.00") newAmount = "0";
+  if (newAmount === "0.00") newAmount = "0";
   return (
-    <div className="flex flex-col justify-between border rounded-16 gap-5 border-neutral-500 bg-neutral-600  p-4 w-full">
+    <div className="flex flex-col justify-between border-2 rounded-16 gap-5 border-neutral-500 bg-neutral-600  p-4 w-full relative">
       <p className="text-neutral-100 text-preset-4 uppercase">
         {variant === "send" ? "Send" : "Receive"}
       </p>
 
-      <div className="w-full flex justify-between items-center">
+      <div className="w-full flex justify-between items-center ">
         <input
           className={`${variant === "receive" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} '
           w-7/10 max-w-7/10 outline-none text-preset-1 font-bold
@@ -51,7 +54,10 @@ const CurrencyInput = ({
           value={newAmount}
         />
 
-        <p>{currency}</p>
+        <CurrencySelector
+          currentCurrency={currency}
+          onCurrencyChange={onCurrencyChange}
+        />
       </div>
     </div>
   );
