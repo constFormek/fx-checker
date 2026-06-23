@@ -5,19 +5,20 @@ import { useEffect, useState } from "react";
 
 import CurrencyInput, { inputVariant } from "./CurrencyInput";
 import Icon from "./Icon";
+import { useCurrencies } from "@/lib/currenciesStore";
 
 interface ConverterProps {
-  symbol: string;
+  quote: string;
   initialExchangeRate: number;
   base: string;
 }
 
-const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
+const Converter = ({ quote, initialExchangeRate, base }: ConverterProps) => {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [sendCurrency, setSendCurrency] = useState(base);
-  const [receiveCurrency, setReceivedCurrency] = useState(symbol);
+  const [receiveCurrency, setReceiveCurrency] = useState(quote);
   const [exchangeRate, setExchangeRate] = useState<number>(initialExchangeRate);
   const [amount, setAmount] = useState<string>("0");
   const [activeInput, setActiveInput] = useState<inputVariant>("receive");
@@ -34,18 +35,18 @@ const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
 
     const temp = sendCurrency;
     setSendCurrency(receiveCurrency);
-    setReceivedCurrency(temp);
+    setReceiveCurrency(temp);
   };
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
         const data = await fetch(
-          `https://api.frankfurter.dev/v1/latest?amount=1&base=${sendCurrency}&symbols=${receiveCurrency}`,
+          `https://api.frankfurter.dev/v2/rate/${sendCurrency}/${receiveCurrency}`,
         );
 
         const json: ExchangeObject = await data.json();
-        setExchangeRate(json.rates[receiveCurrency]);
+        setExchangeRate(json.rate);
       } catch (error) {
         if (error instanceof Error) setError(error.message);
         else setError("something went wrong");
@@ -73,6 +74,7 @@ const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
             handleNewAmount={handleNewAmount}
             variant="send"
             activeInput={activeInput}
+            onCurrencyChange={(code) => setSendCurrency(code)}
           />
 
           <button
@@ -92,6 +94,7 @@ const Converter = ({ symbol, initialExchangeRate, base }: ConverterProps) => {
             handleNewAmount={handleNewAmount}
             variant="receive"
             activeInput={activeInput}
+            onCurrencyChange={(code) => setReceiveCurrency(code)}
           />
         </div>
 
