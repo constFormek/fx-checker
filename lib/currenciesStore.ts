@@ -1,19 +1,61 @@
 import { create } from "zustand";
 import { CurrencyEntry } from "./currencyApi";
+import { INITIAL_PAIR } from "./constants";
+import { persist } from "zustand/middleware";
 
-interface CurrenciesState {
-  currenciesArray: CurrencyEntry[];
-  currenciesObject: Record<string, CurrencyEntry>;
-  setCurrencies: (array: CurrencyEntry[]) => void;
-}
-export const useCurrencies = create<CurrenciesState>()((set) => ({
-  currenciesArray: [],
-  currenciesObject: {},
+type CurrenciesStoreState = {
+  list: CurrencyEntry[];
+  map: Record<string, CurrencyEntry>;
+  pair: {
+    base: string;
+    quote: string;
+  };
+  amount: string;
+};
 
-  setCurrencies: (array) => {
-    const object = Object.fromEntries(
-        array.map((entry) => [entry.iso_code, entry])
-    )
-    set({ currenciesArray: array, currenciesObject: object })
-  },
-}));
+type CurrenciesStoreActions = {
+  setAmount: (newAmount: string) => void;
+  setPair: (send: string, receive: string) => void;
+  hydrateCurrencies: (array: CurrencyEntry[]) => void;
+};
+
+type CurrenciesStore = CurrenciesStoreState & CurrenciesStoreActions;
+
+export const useCurrencies = create<CurrenciesStore>()(
+  persist(
+    (set) => ({
+      list: [],
+      map: {},
+      amount: "0",
+      pair: {
+        base: INITIAL_PAIR.base,
+        quote: INITIAL_PAIR.quote,
+      },
+
+      setAmount: (newAmount) => {
+        set({ amount: newAmount });
+      },
+
+      hydrateCurrencies: (array) => {
+        const object = Object.fromEntries(
+          array.map((entry) => [entry.iso_code, entry]),
+        );
+        set({ list: array, map: object });
+      },
+
+      setPair: (base, quote) => {
+        set({
+          pair: {
+            base: base,
+            quote: quote,
+          },
+        });
+      },
+    }),
+    {
+      name: "lastPair",
+      partialize: (state) => ({ pair: state.pair }),
+      skipHydration: true,
+    },
+  ),
+);
