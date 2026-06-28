@@ -4,126 +4,127 @@ import Image from "next/image";
 import { useState } from "react";
 import Icon from "./Icon";
 import { useCurrencies } from "@/lib/currenciesStore";
+import SelectorRow from "./SelectorRow";
+import { inputVariant } from "./CurrencyInput";
+import { POPULAR_CODES } from "@/lib/constants";
+import CategoryGroup from "./CategoryGroup";
 
 interface CurrencySelectorProps {
-  currentCurrency: string;
-  onCurrencyChange: (code: string) => void;
+  currentCode: string;
+  variant: inputVariant;
+  changeCurrency: (input: inputVariant, code: string) => void;
 }
 
 const CurrencySelector = ({
-  currentCurrency,
-  onCurrencyChange,
+  currentCode,
+  variant,
+  changeCurrency,
 }: CurrencySelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState<string>("");
+  const map = useCurrencies((s) => s.map);
+  const list = useCurrencies((s) => s.list);
 
-  const changeCurrency = (code: string) => {
-    onCurrencyChange(code);
-    setIsOpen(false);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
+  ) => {
+    setQuery(e.target.value);
   };
 
-  const currenciesObject = useCurrencies((s) => s.currenciesObject);
-  const currenciesArray = useCurrencies((s) => s.currenciesArray);
-  console.log(currenciesObject);
-  const popularCodes = ["USD", "GBP", "EUR"];
+  const normalizedQuery = query.toLowerCase();
 
-  const otherCodes = currenciesArray
-    .filter((c) => !popularCodes.includes(c.iso_code))
-    .map((c) => c.iso_code);
+  const searchResults = list.filter((entry) => {
+    const codeQuery = entry.iso_code.toLowerCase().includes(normalizedQuery);
+    const nameQuery = entry.name.toLowerCase().includes(normalizedQuery);
+
+    return codeQuery || nameQuery;
+  });
+
+  const popularEntries = list.filter((c) => POPULAR_CODES.includes(c.iso_code));
+  const otherEntries = list.filter((c) => !POPULAR_CODES.includes(c.iso_code));
 
   const categoriesMap = [
     {
       label: "Popular",
-      codes: popularCodes,
+      entries: popularEntries,
     },
     {
       label: "Other currencies",
-      codes: otherCodes,
+      entries: otherEntries,
     },
   ];
-
   const findCurrentCurrency = (code: string) => {
-    const entry = currenciesObject[code];
+    const entry = map[code];
 
     return entry ? entry : { iso_code: code, flag: "/", name: "LOADING" };
   };
-
-  const selectedCurrency = findCurrentCurrency(currentCurrency);
+  const selectedCurrency = findCurrentCurrency(currentCode);
 
   return (
-    <div className="">
+    <div className="md:relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center rounded-8 gap-2 p-2.5 bg-neutral-500 border-2 border-neutral-400"
+        className="rounded-8 flex items-center gap-2 border-2 border-neutral-400 bg-neutral-500 p-2.5"
       >
         <Image
           className="rounded-full"
           src={selectedCurrency.flag}
           width={20}
           height={20}
-          alt=""
+          alt={`${selectedCurrency.name}`}
         />
 
-        <p className="text-preset-4">{currentCurrency}</p>
+        <p className="text-preset-4">{currentCode}</p>
 
         <Icon name="chevron-down" className="" size={24} />
       </button>
 
       <div
-        className={`${isOpen ? "absolute" : "hidden"} top-full mt-2 max-h-122 overflow-y-auto  z-100 -left-0.5 -right-0.5 rounded-8 p-2 gap-2.5 flex flex-col bg-neutral-600 border-2 border-neutral-400`}
+        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-100 mt-2 flex max-h-122 flex-col gap-2.5 overflow-y-auto border-2 border-neutral-400 bg-neutral-600 p-2 md:right-full md:left-0 md:w-94`}
       >
-        <div className="flex items-center rounded-6 p-3 gap-2.5 border-2 border-neutral-200 ">
+        <div className="rounded-6 flex items-center gap-2.5 border-2 border-neutral-200 p-3">
           <Icon name="search" size={24} />
 
           <input
             type="text"
             placeholder="Search currencies..."
-            className="outline-none text-preset-5"
+            className="text-preset-5 outline-none"
+            onChange={handleChange}
+            value={query}
           />
         </div>
 
         <div className="flex flex-col gap-4">
-          {categoriesMap.map((category, index) => (
-            <div key={index} className="flex flex-col gap-2">
-              <div className="flex w-full justify-between p-2 text-preset-5 text-neutral-200  border-b-2 border-b-neutral-500">
-                <p>{category.label.toUpperCase()}</p>
-
-                <p>{category.codes.length}</p>
-              </div>
-
-              <div className="flex flex-col">
-                {category.codes.map((code, index) => {
-                  const thisCurrency = findCurrentCurrency(code);
-                  return (
-                    <button
-                      onClick={() => changeCurrency(code)}
-                      className="flex items-center w-full justify-between px-2 py-3"
-                      key={index}
-                    >
-                      <div className=" gap-3 flex items-center">
-                        <Image
-                          className="rounded-full"
-                          src={thisCurrency.flag}
-                          width={20}
-                          height={20}
-                          alt=""
-                        />
-
-                        <p className="text-preset-4">{code}</p>
-
-                        <p className="text-preset-5 text-neutral-200">
-                          {thisCurrency.name}
-                        </p>
-                      </div>
-
-                      {currentCurrency === code && (
-                        <Icon name="check" size={12} />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+          {query ? (
+            searchResults.length > 0 ? (
+              searchResults.map((entry) => (
+                <SelectorRow
+                  key={entry.iso_code}
+                  currentCode={currentCode}
+                  variant={variant}
+                  changeCurrency={changeCurrency}
+                  setIsOpen={setIsOpen}
+                  entry={entry}
+                />
+              ))
+            ) : (
+              <p className="rounded-4 text-preset-4 border border-transparent px-2 py-3">
+                No currencies found
+              </p>
+            )
+          ) : (
+            categoriesMap.map((category) => (
+              <CategoryGroup
+                key={category.label}
+                label={category.label}
+                entries={category.entries}
+                currentCode={currentCode}
+                variant={variant}
+                setIsOpen={setIsOpen}
+                changeCurrency={changeCurrency}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
