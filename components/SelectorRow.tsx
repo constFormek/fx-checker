@@ -4,11 +4,11 @@ import Image from "next/image";
 
 import Icon from "./Icon";
 
-import { useCurrencies } from "@/lib/currenciesStore";
 import { inputVariant } from "./CurrencyInput";
+import { CurrencyEntry } from "@/lib/currencyApi";
 
 interface SelectorRowProps {
-  code: string;
+  entry: CurrencyEntry;
   currentCode: string;
   variant: inputVariant;
   changeCurrency: (input: inputVariant, code: string) => void;
@@ -16,26 +16,16 @@ interface SelectorRowProps {
 }
 
 const SelectorRow = ({
-  code,
+  entry,
   currentCode,
   variant,
   changeCurrency,
   setIsOpen,
 }: SelectorRowProps) => {
-  const map = useCurrencies((s) => s.map);
-
-  const findCurrentCurrency = (code: string) => {
-    const entry = map[code];
-
-    return entry ? entry : { iso_code: code, flag: "/", name: "LOADING" };
-  };
-
-  const entry = findCurrentCurrency(code);
-
   return (
     <button
       onClick={() => {
-        changeCurrency(variant, code);
+        changeCurrency(variant, entry.iso_code);
         setIsOpen(false);
       }}
       className="rounded-4 flex cursor-pointer items-center justify-between border border-transparent px-2 py-3 transition hover:border-neutral-200 focus-visible:outline-1 focus-visible:outline-lime-500"
@@ -49,12 +39,12 @@ const SelectorRow = ({
           alt={``}
         />
 
-        <p className="text-preset-4">{code}</p>
+        <p className="text-preset-4">{entry.iso_code}</p>
 
         <p className="text-preset-5 text-neutral-200">{entry.name}</p>
       </div>
 
-      {currentCode === code && <Icon name="check" size={12} />}
+      {currentCode === entry.iso_code && <Icon name="check" size={12} />}
     </button>
   );
 };
