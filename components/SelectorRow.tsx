@@ -4,31 +4,41 @@ import Image from "next/image";
 
 import Icon from "./Icon";
 
-import { inputVariant } from "./CurrencyInput";
 import { CurrencyEntry } from "@/lib/currencyApi";
+import { useEffect, useRef } from "react";
+import { optionId } from "./CurrencySelector";
 
 interface SelectorRowProps {
   entry: CurrencyEntry;
+  idPrefix: string;
   currentCode: string;
-  variant: inputVariant;
-  changeCurrency: (input: inputVariant, code: string) => void;
-  setIsOpen: (bool: boolean) => void;
+  isKeyboardActive: boolean;
+  selectOption: (code: string) => void;
 }
 
 const SelectorRow = ({
   entry,
+  idPrefix,
   currentCode,
-  variant,
-  changeCurrency,
-  setIsOpen,
+  isKeyboardActive,
+  selectOption,
 }: SelectorRowProps) => {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isKeyboardActive) rowRef.current?.scrollIntoView({ block: "nearest" });
+  }, [isKeyboardActive]);
+
   return (
-    <button
+    <div
+      role="option"
+      aria-selected={currentCode === entry.iso_code}
+      id={optionId(idPrefix, entry.iso_code)}
+      ref={rowRef}
       onClick={() => {
-        changeCurrency(variant, entry.iso_code);
-        setIsOpen(false);
+        selectOption(entry.iso_code);
       }}
-      className="rounded-4 flex cursor-pointer items-center justify-between border border-transparent px-2 py-3 transition hover:border-neutral-200 focus-visible:outline-1 focus-visible:outline-lime-500"
+      className={`${isKeyboardActive ? "bg-lime-500" : "bg-transparent focus-visible:outline-1 focus-visible:outline-lime-500"} rounded-4 flex cursor-pointer items-center justify-between border border-transparent px-2 py-3 transition hover:border-neutral-200`}
     >
       <div className="flex items-center gap-3">
         <Image
@@ -45,7 +55,7 @@ const SelectorRow = ({
       </div>
 
       {currentCode === entry.iso_code && <Icon name="check" size={12} />}
-    </button>
+    </div>
   );
 };
 

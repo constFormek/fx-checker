@@ -41,7 +41,7 @@ const Converter = ({ initialRate }: ConverterProps) => {
           className="rounded-8 w-fit border border-neutral-500 bg-neutral-600 p-3.25"
         >
           <Icon
-            name="exchange-vertical"
+            name="exchange-vertical"  
             size={20}
             className="text-neutral-50 md:rotate-90"
           />
@@ -63,12 +63,18 @@ const Converter = ({ initialRate }: ConverterProps) => {
         </p>
 
         <div className="flex items-center gap-2">
-          <button className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 bg-neutral-600 px-3 py-2 text-neutral-200 uppercase">
+          <button
+            onClick={() => {}}
+            className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 bg-neutral-600 px-3 py-2 text-neutral-200 uppercase"
+          >
             <Icon name="star" size={20} />
             <span>Favorite</span>
           </button>
 
-          <button className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 px-3 py-2 text-nowrap text-neutral-200 uppercase">
+          <button
+            onClick={() => {}}
+            className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 px-3 py-2 text-nowrap text-neutral-200 uppercase"
+          >
             Log conversion
           </button>
         </div>

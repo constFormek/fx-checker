@@ -1,22 +1,21 @@
 import { CurrencyEntry } from "@/lib/currencyApi";
 import SelectorRow from "./SelectorRow";
-import { inputVariant } from "./CurrencyInput";
 
 interface CategoryGroupProps {
   label: string;
+  idPrefix: string;
   entries: CurrencyEntry[];
   currentCode: string;
-  variant: inputVariant;
-  changeCurrency: (input: inputVariant, code: string) => void;
-  setIsOpen: (bool: boolean) => void;
+  activeEntry: CurrencyEntry;
+  selectOption: (code: string) => void;
 }
 const CategoryGroup = ({
   label,
+  idPrefix,
   entries,
   currentCode,
-  variant,
-  changeCurrency,
-  setIsOpen,
+  activeEntry,
+  selectOption,
 }: CategoryGroupProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -29,11 +28,11 @@ const CategoryGroup = ({
       <div className="flex flex-col">
         {entries.map((entry) => (
           <SelectorRow
+            idPrefix={idPrefix}
             key={entry.iso_code}
             currentCode={currentCode}
-            variant={variant}
-            changeCurrency={changeCurrency}
-            setIsOpen={setIsOpen}
+            selectOption={selectOption}
+            isKeyboardActive={entry === activeEntry}
             entry={entry}
           />
         ))}
