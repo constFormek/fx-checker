@@ -26,7 +26,7 @@ export const useCurrencies = create<CurrenciesStore>()(
     (set) => ({
       list: [],
       map: {},
-      amount: "0",
+      amount: "1",
       pair: {
         base: INITIAL_PAIR.base,
         quote: INITIAL_PAIR.quote,

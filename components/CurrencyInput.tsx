@@ -27,15 +27,19 @@ const CurrencyInput = ({
 
   return (
     <div className="rounded-16 md:rounded-20 relative flex w-full flex-col justify-between gap-5 border border-neutral-500 bg-neutral-600 p-4 md:p-5">
-      <p className="text-preset-4 text-neutral-100 uppercase">
+      <label
+        htmlFor={variant}
+        className="text-preset-4 text-neutral-100 uppercase"
+      >
         {variant === "base" ? "Send" : "Receive"}
-      </p>
+      </label>
 
       <div className="flex w-full items-center justify-between">
         <input
+          id={variant}
           className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} ' text-preset-1 w-7/10 max-w-7/10 font-bold outline-none`}
           type="text"
-          placeholder={amount}
+          placeholder={"-"}
           onChange={(e) => handleChange(e)}
           value={amount}
         />

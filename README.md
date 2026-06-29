@@ -187,3 +187,16 @@ There are multiple places you can share your solution:
 We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
 
 **Have fun building, and good luck in the hackathon!** 🚀
+
+
+TODO
+
+1. focus states 
+2. hover states
+3. responsivness
+4. accessibility + seo
+5. formatting (commas with thousand)
+6. favorite button
+7. log conversion button
+8. search system
+9. drop shadows
