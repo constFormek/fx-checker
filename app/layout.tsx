@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jetbrainsMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col gap-4">
+      <body className="flex min-h-full flex-col gap-4 scroll-smooth">
         NAV
         <div className="gap-10 px-4 py-8 md:px-6 md:py-12 lg:gap-8 lg:px-8 lg:py-12 items-center justify-center">
           {children}

@@ -25,7 +25,7 @@ const Converter = ({ initialRate }: ConverterProps) => {
   } = useConverter(initialRate);
 
   return (
-    <div className="rounded-20 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700">
+    <div className="rounded-20 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700 drop-shadow-[0px_12px_40px_rgba(0,0,0,0.4)]">
       <div className="flex flex-col items-center gap-4 p-4 md:flex-row md:gap-6 md:p-5">
         <CurrencyInput
           amount={baseValue}
@@ -41,7 +41,7 @@ const Converter = ({ initialRate }: ConverterProps) => {
           className="rounded-8 w-fit border border-neutral-500 bg-neutral-600 p-3.25"
         >
           <Icon
-            name="exchange-vertical"  
+            name="exchange-vertical"
             size={20}
             className="text-neutral-50 md:rotate-90"
           />
@@ -58,7 +58,17 @@ const Converter = ({ initialRate }: ConverterProps) => {
       </div>
 
       <div className="flex flex-col items-center gap-4 p-4 md:flex-row md:justify-between md:px-5 md:py-4">
-        <p className="text-preset-6 md:text-preset-5 text-center">
+        <p
+          role="alert"
+          className="text-preset-6 md:text-preset-5 flex flex-col gap-2 text-center md:flex-row"
+        >
+          {error && (
+            <>
+              <span className="flex flex-col text-red-500 md:flex-row">
+                Oops! Failed to load the rate. Last known rate:
+              </span>
+            </>
+          )}
           1 {base.toUpperCase()} = {exchangeRate} {quote.toUpperCase()}
         </p>
 

@@ -39,7 +39,7 @@ const CurrencyInput = ({
           id={variant}
           className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} ' text-preset-1 w-7/10 max-w-7/10 font-bold outline-none`}
           type="text"
-          placeholder={amount}
+          placeholder={"-"}
           onChange={(e) => handleChange(e)}
           value={amount}
         />

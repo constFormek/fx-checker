@@ -26,18 +26,21 @@ export const useConverter = (initialRate: number) => {
   useEffect(() => {
     const getRate = async () => {
       try {
+        setIsLoading(true);
         const data = await fetchExchangeRate({
           base: base,
           quote: quote,
         });
-        setExchangeRate(data.rate);
-        setError("");
+        setExchangeRate(data.rate); // this in finally too?
+        setError(""); // this in finally too?
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
         } else {
           setError("Something went wrong");
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -51,8 +54,10 @@ export const useConverter = (initialRate: number) => {
   const format = (number: number) => {
     if (!Number.isFinite(number)) return "";
 
+    if (number === 0) return "";
+     
     return number.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     });
   };

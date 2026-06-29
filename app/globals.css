@@ -126,6 +126,19 @@
   letter-spacing: 0px;
 }
 
+@utility scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-200) var(--color-neutral-600);  
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-200);
+    border-radius: var(--radius-6);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-neutral-600);
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: var(--color-neutral-900);
