@@ -1,5 +1,6 @@
 import Converter from "@/components/Converter";
 import CurrencyHydrator from "@/components/CurrencyHydrator";
+import { INITIAL_PAIR } from "@/lib/constants";
 import { fetchCurrenciesData, fetchExchangeRate } from "@/lib/currencyApi";
 
 import { readdirSync } from "fs";
@@ -27,23 +28,20 @@ export default async function Home() {
       };
     });
 
-  const initialExchangeData = await fetchExchangeRate({
-    base: "USD",
-    quote: "EUR",
+  const initialData = await fetchExchangeRate({
+    base: INITIAL_PAIR.base,
+    quote: INITIAL_PAIR.quote,
   });
   return (
     <>
-      <div className="flex flex-col bg-neutral-900 font-jetbrains-mono w-screen h-screen overflow-hidden items-center ">
-        <h1 className="font-jetbrains-mono">CHECK THE RATE</h1>
-
-        <Converter
-          base={"USD"}
-          quote={"EUR"}
-          initialExchangeRate={initialExchangeData.rate}
-        />
+      <div className="font-jetbrains-mono flex flex-col gap-4 bg-neutral-900">
+        <h2 className="font-jetbrains-mono text-preset-2 uppercase">
+          Check the rate
+        </h2>
+        <Converter initialRate={initialData.rate} />
       </div>
 
-      <CurrencyHydrator currencies={supportedCurrencies} />
+      <CurrencyHydrator availableCurrencies={supportedCurrencies} />
     </>
   );
 }

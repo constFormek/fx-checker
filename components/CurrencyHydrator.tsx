@@ -4,14 +4,21 @@ import { useCurrencies } from "@/lib/currenciesStore";
 import { CurrencyEntry } from "@/lib/currencyApi";
 import { useEffect } from "react";
 
+interface CurrencyHydratorProps {
+  availableCurrencies: CurrencyEntry[];
+}
 
+const CurrencyHydrator = ({ availableCurrencies }: CurrencyHydratorProps) => {
+  const hydrateCurrencies = useCurrencies((s) => s.hydrateCurrencies);
 
-const CurrencyHydrator = ({ currencies }: { currencies: CurrencyEntry[] }) => {
-  const setCurrencies = useCurrencies((s) => s.setCurrencies);
-  
   useEffect(() => {
-    setCurrencies(currencies);
-  }, [setCurrencies, currencies]) // for linting errors
+    useCurrencies.persist.rehydrate();
+  }, [])
+
+  useEffect(() => {
+    hydrateCurrencies(availableCurrencies);
+  }, [hydrateCurrencies, availableCurrencies]); // for linting errors
+
   return null;
 };
 

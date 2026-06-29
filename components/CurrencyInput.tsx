@@ -2,61 +2,48 @@
 
 import CurrencySelector from "./CurrencySelector";
 
-export type inputVariant = "send" | "receive";
+export type inputVariant = "base" | "quote";
 
 interface CurrencyInputProps {
   amount: string;
-  currency: string;
+  currentCode: string;
   variant: inputVariant;
-  handleNewAmount: (variant: inputVariant, newAmount: string) => void;
-  onCurrencyChange: (code: string) => void;
   activeInput: inputVariant;
+  changeCurrency: (input: inputVariant, code: string) => void;
+  changeAmount: (variant: inputVariant, newAmount: string) => void;
 }
 const CurrencyInput = ({
   amount,
-  currency,
+  currentCode,
   variant,
-  handleNewAmount,
-  onCurrencyChange,
-  activeInput,
+  changeCurrency,
+  changeAmount,
 }: CurrencyInputProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
   ) => {
-    if (e.target.value === "") {
-      handleNewAmount(variant, "");
-      return;
-    }
-
-    const parsedValue = Number(e.target.value);
-    if (!Number.isNaN(parsedValue) && parsedValue >= 0) {
-      handleNewAmount(variant, e.target.value);
-    }
+    changeAmount(variant, e.target.value);
   };
 
-  let newAmount = activeInput === variant ? amount : Number(amount).toFixed(2);
-
-  if (newAmount === "0.00") newAmount = "0";
   return (
-    <div className="flex flex-col justify-between border-2 rounded-16 gap-5 border-neutral-500 bg-neutral-600  p-4 w-full relative">
-      <p className="text-neutral-100 text-preset-4 uppercase">
-        {variant === "send" ? "Send" : "Receive"}
+    <div className="rounded-16 md:rounded-20 relative flex w-full flex-col justify-between gap-5 border border-neutral-500 bg-neutral-600 p-4 md:p-5">
+      <p className="text-preset-4 text-neutral-100 uppercase">
+        {variant === "base" ? "Send" : "Receive"}
       </p>
 
-      <div className="w-full flex justify-between items-center ">
+      <div className="flex w-full items-center justify-between">
         <input
-          className={`${variant === "receive" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} '
-          w-7/10 max-w-7/10 outline-none text-preset-1 font-bold
-          `}
+          className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} ' text-preset-1 w-7/10 max-w-7/10 font-bold outline-none`}
           type="text"
-          placeholder={newAmount}
+          placeholder={amount}
           onChange={(e) => handleChange(e)}
-          value={newAmount}
+          value={amount}
         />
 
         <CurrencySelector
-          currentCurrency={currency}
-          onCurrencyChange={onCurrencyChange}
+          variant={variant}
+          changeCurrency={changeCurrency}
+          currentCode={currentCode}
         />
       </div>
     </div>
