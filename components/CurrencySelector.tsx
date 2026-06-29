@@ -24,6 +24,7 @@ const CurrencySelector = ({
   changeCurrency,
 }: CurrencySelectorProps) => {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -34,6 +35,32 @@ const CurrencySelector = ({
   const map = useCurrencies((s) => s.map);
   const list = useCurrencies((s) => s.list);
 
+  const closeListbox = () => {
+    setIsOpen(false);
+    setQuery("");
+    setActiveIndex(-1);
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        e.target instanceof Node &&
+        !containerRef.current.contains(e.target)
+      ) {
+        closeListbox();
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen]);
+
   const didMount = useRef(false);
   useEffect(() => {
     if (!didMount.current) {
@@ -42,7 +69,9 @@ const CurrencySelector = ({
     }
 
     if (isOpen) searchInputRef.current?.focus();
-    else triggerButtonRef.current?.focus();
+    else {
+      triggerButtonRef.current?.focus();
+    }
   }, [isOpen]);
 
   const normalizedQuery = query.toLowerCase();
@@ -74,8 +103,7 @@ const CurrencySelector = ({
 
   const selectOption = (code: string) => {
     changeCurrency(variant, code);
-    setQuery("");
-    setIsOpen(false);
+    closeListbox();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -97,7 +125,7 @@ const CurrencySelector = ({
         break;
       case "Escape":
         e.preventDefault();
-        setIsOpen(false);
+        closeListbox();
         break;
       default:
         break;
@@ -119,12 +147,12 @@ const CurrencySelector = ({
   const selectedCurrency = findCurrency(currentCode);
 
   return (
-    <div className="md:relative">
+    <div className="md:relative" ref={containerRef}>
       <button
         ref={triggerButtonRef}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => isOpen ? closeListbox() : setIsOpen(true)}
         className="rounded-8 flex items-center gap-2 border-2 border-neutral-400 bg-neutral-500 p-2.5"
       >
         <Image
@@ -141,7 +169,7 @@ const CurrencySelector = ({
       </button>
 
       <div
-        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-100 mt-2 flex max-h-122 flex-col gap-2.5 overflow-y-auto border-2 border-neutral-400 bg-neutral-600 p-2 md:right-full md:left-0 md:w-94`}
+        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-100 mt-2 flex max-h-122 flex-col gap-2.5 border-2 border-neutral-400 bg-neutral-600 p-2 md:right-0 md:left-auto md:w-94`}
       >
         <div className="rounded-6 flex items-center gap-2.5 border-2 border-neutral-200 p-3">
           <Icon name="search" size={24} />
@@ -172,9 +200,10 @@ const CurrencySelector = ({
         </div>
 
         <div
-          role="Currencies"
+          role="listbox"
+          aria-label="Currencies"
           id={`${id}-listbox`}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 overflow-y-auto"
         >
           {query ? (
             searchResults.length > 0 ? (
