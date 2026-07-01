@@ -100,7 +100,3 @@ export const useConverter = (initialRate: number) => {
     changeAmount,
   };
 };
-
-// to fix localStorage flash
-// computing when exchangeRate = 0
-// both fixed with isLoading
