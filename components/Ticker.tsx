@@ -5,9 +5,20 @@ const Ticker = () => {
         <div className="aspect-square w-1.5 rounded-full bg-neutral-900"></div>
 
         <p>Live markets</p>
+
+        
       </div>
     </div>
   );
+};
+
+interface TickerItemProps {
+  rate: number;
+  pair: { base: string; quote: string };
+}
+
+export const TickerItem = ({ rate, pair }: TickerItemProps) => {
+
 };
 
 export default Ticker;
