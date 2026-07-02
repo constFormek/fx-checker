@@ -1,6 +1,7 @@
-import Converter from "@/components/Converter";
+import Converter from "@/components/converter/Converter";
 import CurrencyHydrator from "@/components/CurrencyHydrator";
 import Header from "@/components/Header";
+import Tabs from "@/components/tabs/Tabs";
 import { INITIAL_PAIR } from "@/lib/constants";
 import {
   fetchCurrenciesData,
@@ -44,7 +45,7 @@ export default async function Home() {
     <>
       <Header currenciesCount={supportedCurrencies.length} />
 
-      <div className="items-center justify-center gap-10 px-4 py-8 md:px-6 md:py-12 lg:gap-8 lg:px-8 lg:py-12">
+      <div className="flex w-full flex-col items-center justify-center gap-10 px-4 py-8 md:px-6 md:py-12 lg:gap-8 lg:px-8 lg:py-12">
         <div className="font-jetbrains-mono flex flex-col gap-4 bg-neutral-900">
           <h2 className="font-jetbrains-mono text-preset-2 uppercase">
             Check the rate
@@ -52,8 +53,10 @@ export default async function Home() {
           <Converter initialRate={initialData.rate} />
         </div>
 
-        <CurrencyHydrator availableCurrencies={supportedCurrencies} />
+        <Tabs />
       </div>
+
+      <CurrencyHydrator availableCurrencies={supportedCurrencies} />
     </>
   );
 }
