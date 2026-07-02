@@ -121,12 +121,17 @@ export type iconKey = keyof typeof IconMap;
 
 type Props = {
   name: iconKey;
-  label?: string
+  label?: string;
   className?: string;
   size?: number | string;
 };
 
-export default function Icon({ name, label, className = "", size = "2.5em" }: Props) {
+export default function Icon({
+  name,
+  label,
+  className = "",
+  size = "2.5em",
+}: Props) {
   const icon = IconMap[name];
 
   return (
