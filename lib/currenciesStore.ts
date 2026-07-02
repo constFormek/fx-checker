@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { CurrencyEntry } from "./currencyApi";
 import { INITIAL_PAIR } from "./constants";
 import { persist } from "zustand/middleware";
+import { favoriteEntryId } from "./helpers";
 
 type CurrenciesStoreState = {
   list: CurrencyEntry[];
@@ -11,11 +12,13 @@ type CurrenciesStoreState = {
     quote: string;
   };
   amount: string;
+  favoritesList: { id: string; pair: { base: string; quote: string } }[];
 };
 
 type CurrenciesStoreActions = {
   setAmount: (newAmount: string) => void;
   setPair: (send: string, receive: string) => void;
+  toggleFavorite: (pair: { base: string; quote: string }) => void;
   hydrateCurrencies: (array: CurrencyEntry[]) => void;
 };
 
@@ -23,7 +26,7 @@ type CurrenciesStore = CurrenciesStoreState & CurrenciesStoreActions;
 
 export const useCurrencies = create<CurrenciesStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       list: [],
       map: {},
       amount: "1",
@@ -31,6 +34,8 @@ export const useCurrencies = create<CurrenciesStore>()(
         base: INITIAL_PAIR.base,
         quote: INITIAL_PAIR.quote,
       },
+
+      favoritesList: [],
 
       setAmount: (newAmount) => {
         set({ amount: newAmount });
@@ -43,6 +48,20 @@ export const useCurrencies = create<CurrenciesStore>()(
         set({ list: array, map: object });
       },
 
+      toggleFavorite: (pair) => {
+        const id = favoriteEntryId(pair.base, pair.quote);
+        const favoritesList = get().favoritesList;
+        const entry = favoritesList.find((e) => e.id === id);
+
+        const newFavorites = entry
+          ? favoritesList.filter((e) => e.id !== id)
+          : [{ id: id, pair: pair }, ...favoritesList];
+
+        set({
+          favoritesList: newFavorites,
+        });
+      },
+
       setPair: (base, quote) => {
         set({
           pair: {
@@ -53,8 +72,11 @@ export const useCurrencies = create<CurrenciesStore>()(
       },
     }),
     {
-      name: "lastPair",
-      partialize: (state) => ({ pair: state.pair }),
+      name: "state",
+      partialize: (state) => ({
+        pair: state.pair,
+        favoritesList: state.favoritesList,
+      }),
       skipHydration: true,
     },
   ),
