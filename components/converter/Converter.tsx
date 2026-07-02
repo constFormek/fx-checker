@@ -1,7 +1,7 @@
 "use client";
 
 import CurrencyInput from "./CurrencyInput";
-import Icon from "./Icon";
+import Icon from "../Icon";
 
 import { useConverter } from "@/lib/hooks/useConverter";
 

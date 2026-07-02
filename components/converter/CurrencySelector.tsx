@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
-import Icon from "./Icon";
+import Icon from "../Icon";
 import { useCurrencies } from "@/lib/currenciesStore";
 import SelectorRow from "./SelectorRow";
 import { inputVariant } from "./CurrencyInput";
@@ -203,7 +203,7 @@ const CurrencySelector = ({
           role="listbox"
           aria-label="Currencies"
           id={`${id}-listbox`}
-          className="flex flex-col gap-4 overflow-y-auto scrollbar-custom pr-2"
+          className="scrollbar-custom flex flex-col gap-4 overflow-y-auto pr-2"
         >
           {query ? (
             searchResults.length > 0 ? (

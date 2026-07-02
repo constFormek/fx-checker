@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import Icon from "./Icon";
+import Icon from "../Icon";
 
 import { CurrencyEntry } from "@/lib/currencyApi";
 import { useEffect, useRef } from "react";

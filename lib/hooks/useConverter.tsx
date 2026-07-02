@@ -1,6 +1,6 @@
 "use client";
 
-import { inputVariant } from "@/components/CurrencyInput";
+import { inputVariant } from "@/components/converter/CurrencyInput";
 import { useState, useEffect } from "react";
 import { fetchExchangeRate } from "../currencyApi";
 import { VALID_AMOUNT_REGEX } from "../constants";
