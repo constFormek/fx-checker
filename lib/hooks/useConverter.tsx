@@ -31,8 +31,8 @@ export const useConverter = (initialRate: number) => {
           base: base,
           quote: quote,
         });
-        setExchangeRate(data.rate); // this in finally too?
-        setError(""); // this in finally too?
+        setExchangeRate(data.rate);
+        setError("");
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -55,7 +55,7 @@ export const useConverter = (initialRate: number) => {
     if (!Number.isFinite(number)) return "";
 
     if (number === 0) return "";
-     
+
     return number.toLocaleString("en-US", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
@@ -100,7 +100,3 @@ export const useConverter = (initialRate: number) => {
     changeAmount,
   };
 };
-
-// to fix localStorage flash
-// computing when exchangeRate = 0
-// both fixed with isLoading
