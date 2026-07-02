@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jetbrainsMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col gap-4 scroll-smooth">
-        {children}
-      </body>
+      <body className="min-h-full scroll-smooth">{children}</body>
     </html>
   );
 }
