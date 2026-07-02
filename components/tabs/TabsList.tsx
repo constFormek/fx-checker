@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import Icon from "../Icon";
 import { TabsConfig, TabType } from "./config";
+import { tabId } from "@/lib/helpers";
 
 interface TabsListProps {
   activeTabId: TabType;
@@ -49,10 +50,6 @@ const MobileMenu = ({ activeTabId, setActiveTabId }: MobileMenuProps) => {
   const id = useId();
 
   const activeTab = TabsConfig.find((t) => t.id === activeTabId);
-
-  const tabId = (prefix: string, tab: TabType) => {
-    return `${prefix}-tab-${tab}`;
-  };
 
   if (!activeTab) return null;
   return (
