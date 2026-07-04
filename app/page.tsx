@@ -6,7 +6,7 @@ import { INITIAL_PAIR } from "@/lib/constants";
 import {
   fetchCurrenciesData,
   fetchExchangeRate,
-  fetchTickerData,
+  fetchDailyRate
 } from "@/lib/currencyApi";
 
 import { readdirSync } from "fs";
@@ -39,7 +39,7 @@ export default async function Home() {
     quote: INITIAL_PAIR.quote,
   });
 
-  const fetchTiker = await fetchTickerData();
+  const fetchTiker = await fetchDailyRate();
   console.log(fetchTiker);
   return (
     <>
