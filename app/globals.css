@@ -139,6 +139,38 @@
   }
 }
 
+@keyframes ticker-sliding-animation {
+    from {
+      transform: translateX(0%);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+.ticker-track {
+  animation: 25s linear 0s infinite ticker-sliding-animation
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+
+  .ticker-wrapper {
+    overflow-x: auto;
+  }
+
+  .ticker-track-copy {
+    display: none;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: var(--color-neutral-900);

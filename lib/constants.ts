@@ -34,4 +34,21 @@ export const TICKER_PAIRS = [
     base: "USD",
     quote: "CAD",
   },
+
+  {
+    base: "PLN",
+    quote: "EUR",
+  },
+
+  {
+    base: "CHF",
+    quote: "PLN",
+  },
+
+  {
+    base: "PLN",
+    quote: "GBP",
+  },
+
+ 
 ];
