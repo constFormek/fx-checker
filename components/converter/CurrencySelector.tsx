@@ -8,9 +8,7 @@ import SelectorRow from "./SelectorRow";
 import { inputVariant } from "./CurrencyInput";
 import { POPULAR_CODES } from "@/lib/constants";
 import CategoryGroup from "./CategoryGroup";
-
-export const optionId = (prefix: string, code: string) =>
-  `${prefix}-option-${code}`;
+import { optionId } from "@/lib/helpers";
 
 interface CurrencySelectorProps {
   currentCode: string;

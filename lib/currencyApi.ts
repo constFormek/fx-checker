@@ -28,13 +28,13 @@ export const fetchCurrenciesData = () => {
   return fetchHelper<CurrencyEntry[]>(url);
 };
 
-const d = new Date();
-d.setDate(d.getDate() - 1);
-const from = d.toISOString().slice(0, 10);
+export type GroupedRates = Record<string, Record<string, number>>;
 
-type GroupedRates = Record<string, Record<string, number>>;
+export const fetchDailyRate = async () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const from = d.toISOString().slice(0, 10);
 
-export const fetchTickerData = async () => {
   const url = `https://api.frankfurter.dev/v2/rates?from=${from}&base=EUR`;
   const array = await fetchHelper<ExchangeObject[]>(url);
 

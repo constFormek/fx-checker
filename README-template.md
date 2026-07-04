@@ -91,18 +91,35 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 
 ## My process
 
-The first thing i had to do was to clean up the default file structure and get rid of boiler plate code. 
-After that i created css variables from the figma file.
-Then came the part of creating a two-way converter, because i felt that it gives user better experience if he doesn't have to click the switch button 
-to convert back from the other currency. 
-I struggled a lot with this part, not sure why but i came across many weird small errors and i felt overwhelmed. I used AI to guide
-me and kind of explain what was I doing wrong and it told me what to consider and the rest after that kind of clicked.
-So i didn't knew at the beginning that the both way conversion from the inputs was required, but i looked up closely at the design and found this out.
-I built the rest of the converter ui, besides the currency picker, i have built the swap button and made it work, with slight issues with the roundings which
-kind of drives me crazy, but i will try to fix those issues if I won't run out of time. I do feel a little bit overwhelmed because i have started many features inside
-the converter alone but none of them is 100% finished, i still need to make it responsive, finish the picker, add local storage, etc. I'm slowly making progress but i get stuck
-a lot of times. 
+rough draft
 
+DECISIONS
+Why did I chose Zustand over Context API - 
+  I needed a global state management that would be clean and simple to implement, with Context API every consumer is being re-rendered every time a value inside the context changes, even a consumer which reads the part that didn't change. with Zustand I can subscribe to changes in certain parts of its state. As a bonus I already have tried using Zustand in my last project, which allowed me to quickly set it up. Another factor that later came up, was with Zustand's persist. It did simplify the process of storing the data I needed inside the local storage. Altough I had to learn how to use this middleware and I had to handle hydration issues by manually rehydrating after mount, I feel that Zustand is a better fit for this app's needs
+How did I decide what to keep in the store -
+  If the state is shared across distant components -> in the store. Used by one component or its children -> store it locally. I struggled with this a lot and after many attempts i finally learned to tell what genuinely should go to the store and what should be kept localy. When I saw that a feature like favorites, required me to use prop drilling, I already knew that its place was in the store.
+focus on input, 
+formatting functions, 
+single amount in the store, 
+what did i kept in the store,
+why the converter hook,
+why persist,
+why this tab system
+icon component
+
+
+
+ISSUES
+hydration missmatch
+regex validation
+accessibility (too much got lost)
+returning focus on drop down close
+persist
+tabs system
+wanting to do too much, feeling like this isn't the best solution every time, 
+keeping clean folder structure (getting lost most of the time),
+files are mostly containing junk or weird stuff that should be taken out of them
+fetching
 
 ### Built with
 

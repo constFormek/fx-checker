@@ -6,7 +6,7 @@ import Icon from "../Icon";
 
 import { CurrencyEntry } from "@/lib/currencyApi";
 import { useEffect, useRef } from "react";
-import { optionId } from "./CurrencySelector";
+import { optionId } from "@/lib/helpers";
 
 interface SelectorRowProps {
   entry: CurrencyEntry;

@@ -4,6 +4,8 @@ import CurrencyInput from "./CurrencyInput";
 import Icon from "../Icon";
 
 import { useConverter } from "@/lib/hooks/useConverter";
+import { useCurrencies } from "@/lib/currenciesStore";
+import { favoriteEntryId } from "@/lib/helpers";
 
 interface ConverterProps {
   initialRate: number;
@@ -23,6 +25,12 @@ const Converter = ({ initialRate }: ConverterProps) => {
     swapCurrencies,
     changeAmount,
   } = useConverter(initialRate);
+
+  const toggleFavorite = useCurrencies((s) => s.toggleFavorite);
+  const favoritesList = useCurrencies((s) => s.favoritesList);
+  const isFavorited = favoritesList.find(
+    (e) => e.id === favoriteEntryId(base, quote),
+  );
 
   return (
     <div className="rounded-20 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700 drop-shadow-[0px_12px_40px_rgba(0,0,0,0.4)]">
@@ -74,11 +82,20 @@ const Converter = ({ initialRate }: ConverterProps) => {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {}}
-            className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 bg-neutral-600 px-3 py-2 text-neutral-200 uppercase"
+            onClick={() => toggleFavorite({ base: base, quote: quote })}
+            className={`${isFavorited ? "border-lime-500 bg-lime-500 text-neutral-900" : "border-neutral-300 bg-neutral-600 text-neutral-200"} rounded-8 flex w-fit items-center gap-2 border px-3 py-2 uppercase`}
           >
-            <Icon name="star" size={20} />
-            <span>Favorite</span>
+            {isFavorited ? (
+              <>
+                <Icon name="star-filled" size={20} />
+                <span>Favorited</span>
+              </>
+            ) : (
+              <>
+                <Icon name="star" size={20} />
+                <span>Favorite{isFavorited && "d"}</span>
+              </>
+            )}
           </button>
 
           <button
