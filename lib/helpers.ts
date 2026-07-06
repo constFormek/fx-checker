@@ -14,10 +14,10 @@ export const favoriteEntryId = (base: string, quote: string) => {
 
 export const getPairSnapshot = (
   data: GroupedRates,
-  dates: string[],
   from: string,
   to: string,
 ) => {
+  const dates = Object.keys(data);
   const todaysRate = crossRate(data[dates[1]], from, to);
   const yesterdaysRate = crossRate(data[dates[0]], from, to);
 
@@ -46,4 +46,11 @@ export const calculateChange = (old: number, newer: number) => {
     change: change,
     percentage: percentage,
   };
+};
+
+export const formatAmount = (number: number) => {
+  return number.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
 };
