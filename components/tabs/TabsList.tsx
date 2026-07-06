@@ -26,7 +26,7 @@ const TabsList = ({ activeTabId, setActiveTabId }: TabsListProps) => {
               handleClick(tab.id);
             }}
             key={tab.id}
-            className={`${activeTabId === tab.id && "border-b border-b-lime-500"} text-preset-3 flex items-center gap-2 px-4 pb-3 uppercase`}
+            className={`${activeTabId === tab.id ? "border-b-lime-500" : "border-transparent"} text-preset-3 flex items-center gap-2 border-b px-4 pb-3 uppercase`}
           >
             {tab.label}
           </button>

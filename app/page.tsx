@@ -6,7 +6,6 @@ import { INITIAL_PAIR } from "@/lib/constants";
 import {
   fetchCurrenciesData,
   fetchExchangeRate,
-  fetchDailyRate,
 } from "@/lib/currencyApi";
 import { readdirSync } from "fs";
 
