@@ -6,6 +6,7 @@ import { fetchExchangeRate } from "../currencyApi";
 import { VALID_AMOUNT_REGEX } from "../constants";
 import { useCurrencies } from "../currenciesStore";
 import { useShallow } from "zustand/shallow";
+import { formatAmount } from "../helpers";
 
 export const useConverter = (initialRate: number) => {
   const { amount, setAmount, base, quote, setPair } = useCurrencies(
@@ -56,10 +57,7 @@ export const useConverter = (initialRate: number) => {
 
     if (number === 0) return "";
 
-    return number.toLocaleString("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
+    return formatAmount(number);
   };
 
   const isValidAmount = (str: string) => {
