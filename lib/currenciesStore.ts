@@ -4,21 +4,38 @@ import { INITIAL_PAIR } from "./constants";
 import { persist } from "zustand/middleware";
 import { favoriteEntryId } from "./helpers";
 
+export type Pair = {
+  base: string;
+  quote: string;
+};
+
 type CurrenciesStoreState = {
   list: CurrencyEntry[];
   map: Record<string, CurrencyEntry>;
-  pair: {
-    base: string;
-    quote: string;
-  };
+  pair: Pair;
   amount: string;
-  favoritesList: { id: string; pair: { base: string; quote: string } }[];
+  favorites: { id: string; pair: { base: string; quote: string } }[];
+  logs: {
+    id: string;
+    pair: Pair;
+    timestamp: number;
+    sendAmount: string;
+    receiveAmount: string;
+  }[];
 };
 
 type CurrenciesStoreActions = {
   setAmount: (newAmount: string) => void;
   setPair: (send: string, receive: string) => void;
-  toggleFavorite: (pair: { base: string; quote: string }) => void;
+  toggleFavorite: (pair: Pair) => void;
+  logConversion: (
+    pair: Pair,
+    timestamp: number,
+    sendAmount: string,
+    receiveAmount: string,
+  ) => void;
+  clearLogs: () => void;
+  deleteLog: (id: string) => void;
   hydrateCurrencies: (array: CurrencyEntry[]) => void;
 };
 
@@ -34,8 +51,9 @@ export const useCurrencies = create<CurrenciesStore>()(
         base: INITIAL_PAIR.base,
         quote: INITIAL_PAIR.quote,
       },
+      logs: [],
 
-      favoritesList: [],
+      favorites: [],
 
       setAmount: (newAmount) => {
         set({ amount: newAmount });
@@ -50,15 +68,48 @@ export const useCurrencies = create<CurrenciesStore>()(
 
       toggleFavorite: (pair) => {
         const id = favoriteEntryId(pair.base, pair.quote);
-        const favoritesList = get().favoritesList;
-        const entry = favoritesList.find((e) => e.id === id);
+        const favorites = get().favorites;
+        const entry = favorites.find((e) => e.id === id);
 
         const newFavorites = entry
-          ? favoritesList.filter((e) => e.id !== id)
-          : [{ id: id, pair: pair }, ...favoritesList];
+          ? favorites.filter((e) => e.id !== id)
+          : [{ id: id, pair: pair }, ...favorites];
 
         set({
-          favoritesList: newFavorites,
+          favorites: newFavorites,
+        });
+      },
+
+      logConversion(pair, timestamp, sendAmount, receiveAmount) {
+        if (sendAmount === "" || receiveAmount === "") return;
+
+        const logs = get().logs;
+        const id = crypto.randomUUID();
+
+        const newEntry = {
+          id: id,
+          pair: pair,
+          timestamp: timestamp,
+          sendAmount: sendAmount,
+          receiveAmount: receiveAmount,
+        };
+        set({
+          logs: [newEntry, ...logs],
+        });
+      },
+
+      deleteLog(id) {
+        const logs = get().logs;
+        const filteredLogs = logs.filter((entry) => entry.id !== id);
+
+        set({
+          logs: filteredLogs,
+        });
+      },
+
+      clearLogs() {
+        set({
+          logs: [],
         });
       },
 
@@ -75,7 +126,8 @@ export const useCurrencies = create<CurrenciesStore>()(
       name: "state",
       partialize: (state) => ({
         pair: state.pair,
-        favoritesList: state.favoritesList,
+        favoritesList: state.favorites,
+        logs: state.logs,
       }),
       skipHydration: true,
     },
