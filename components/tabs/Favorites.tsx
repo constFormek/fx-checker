@@ -5,14 +5,14 @@ import { getPairSnapshot } from "@/lib/helpers";
 import FavoriteItem from "./FavoriteItem";
 
 const Favorites = () => {
-  const favoritesList = useCurrencies((s) => s.favoritesList);
+  const favorites = useCurrencies((s) => s.favorites);
 
   const { data, error, isPending } = useRates();
 
   if (isPending) return <span>ŁADOWANIE</span>;
   if (error) return <span>BŁĄD</span>;
 
-  const favoritesArray = favoritesList.map((entry) => {
+  const favoritesEntries = favorites.map((entry) => {
     return {
       id: entry.id,
       ...getPairSnapshot(data, entry.pair.base, entry.pair.quote),
@@ -20,7 +20,7 @@ const Favorites = () => {
     };
   });
 
-  if (favoritesList.length === 0) {
+  if (favorites.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 py-10 text-center">
         <h3 className="text-preset-2 text-neutral-100">No pinned pairs yet</h3>
@@ -37,11 +37,11 @@ const Favorites = () => {
       <div className="flex w-full items-center justify-between uppercase">
         <p className="text-preset-3-medium">Pinned pairs</p>
 
-        <p className="text-preset-5">{favoritesList.length} Favorites</p>
+        <p className="text-preset-5">{favorites.length} Favorites</p>
       </div>
 
       <div className="flex flex-col gap-3">
-        {favoritesArray.map((entry) => (
+        {favoritesEntries.map((entry) => (
           <FavoriteItem
             key={entry.id}
             rate={entry.todaysRate}

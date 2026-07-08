@@ -11,7 +11,7 @@ const FavoriteButton = ({ pair }: FavoriteButtonProps) => {
   const id = favoriteEntryId(pair.base, pair.quote);
   const toggleFavorite = useCurrencies((s) => s.toggleFavorite);
   const isFavorite = useCurrencies((s) =>
-    s.favoritesList.some((f) => f.id === id),
+    s.favorites.some((f) => f.id === id),
   );
   return (
     <button
