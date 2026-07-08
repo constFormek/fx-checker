@@ -27,11 +27,12 @@ const Converter = ({ initialRate }: ConverterProps) => {
   } = useConverter(initialRate);
 
   const toggleFavorite = useCurrencies((s) => s.toggleFavorite);
-  const favoritesList = useCurrencies((s) => s.favoritesList);
-  const isFavorited = favoritesList.find(
+  const favorites = useCurrencies((s) => s.favorites);
+  const logConversion = useCurrencies((s) => s.logConversion);
+  const isFavorited = favorites.find(
     (e) => e.id === favoriteEntryId(base, quote),
   );
-
+  const isConversionDisabled = baseValue === "" || quoteValue === "";
   return (
     <div className="rounded-20 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700 drop-shadow-[0px_12px_40px_rgba(0,0,0,0.4)]">
       <div className="flex flex-col items-center gap-4 p-4 md:flex-row md:gap-6 md:p-5">
@@ -99,8 +100,16 @@ const Converter = ({ initialRate }: ConverterProps) => {
           </button>
 
           <button
-            onClick={() => {}}
-            className="rounded-8 flex w-fit items-center gap-2 border border-neutral-300 px-3 py-2 text-nowrap text-neutral-200 uppercase"
+            onClick={() => {
+              logConversion(
+                { base: base, quote: quote },
+                Date.now(),
+                baseValue,
+                quoteValue,
+              );
+            }}
+            disabled={isConversionDisabled}
+            className={`${isConversionDisabled ? "border-neutral-300 text-neutral-200" : "border-lime-500 text-neutral-50"} transition rounded-8 flex w-fit items-center gap-2 border px-3 py-2 text-nowrap uppercase`}
           >
             Log conversion
           </button>
