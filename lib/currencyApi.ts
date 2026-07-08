@@ -1,3 +1,5 @@
+import { PeriodType } from "@/components/tabs/History";
+import { Pair } from "./currenciesStore";
 import { fetchHelper } from "./fetchHelper";
 
 interface fetchExchangeRateProps {
@@ -67,4 +69,46 @@ export const fetchDailyRate = async (
       return [date, result[date]];
     }),
   );
+};
+
+export const fetchHistoryRate = async (period: PeriodType, pair: Pair) => {
+  let days = 0;
+
+  switch (period) {
+    case "1d":
+      days = 1;
+      break;
+    case "1w":
+      days = 7;
+      break;
+    case "1m":
+      days = 30;
+      break;
+    case "3m":
+      days = 90;
+      break;
+    case "1y":
+      days = 12 * 30;
+      break;
+    case "5y":
+      days = 12 * 30 * 5;
+      break;
+  }
+
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  const fromUrl = d.toISOString().slice(0, 10);
+
+  const url = `https://api.frankfurter.dev/v2/rates?base=${pair.base}&from=${fromUrl}&quotes=${pair.quote}`;
+
+  const data = await fetchHelper<ExchangeObject[]>(url);
+
+  const chartData = data.map((entry) => {
+    return {
+      date: entry.date,
+      rate: entry.rate,
+    };
+  });
+
+  return chartData;
 };
