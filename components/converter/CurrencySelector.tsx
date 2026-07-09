@@ -167,7 +167,7 @@ const CurrencySelector = ({
       </button>
 
       <div
-        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-100 mt-2 flex max-h-122 flex-col gap-2.5 border border-neutral-400 bg-neutral-600 p-2 md:right-0 md:left-auto md:w-94`}
+        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-50 mt-2 flex max-h-122 flex-col gap-2.5 border border-neutral-400 bg-neutral-600 p-2 md:right-0 md:left-auto md:w-94`}
       >
         <div className="rounded-6 flex items-center gap-2.5 border border-neutral-200 p-3">
           <Icon name="search" size={24} />

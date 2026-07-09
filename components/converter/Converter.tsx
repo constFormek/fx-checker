@@ -34,7 +34,7 @@ const Converter = ({ initialRate }: ConverterProps) => {
   );
   const isConversionDisabled = baseValue === "" || quoteValue === "";
   return (
-    <div className="rounded-20 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700 drop-shadow-[0px_12px_40px_rgba(0,0,0,0.4)]">
+    <div className="rounded-20 relative z-30 flex w-full flex-col divide-y-2 divide-dashed divide-neutral-500 bg-neutral-700 drop-shadow-[0px_12px_40px_rgba(0,0,0,0.4)]">
       <div className="flex flex-col items-center gap-4 p-4 md:flex-row md:gap-6 md:p-5">
         <CurrencyInput
           amount={baseValue}
@@ -109,7 +109,7 @@ const Converter = ({ initialRate }: ConverterProps) => {
               );
             }}
             disabled={isConversionDisabled}
-            className={`${isConversionDisabled ? "border-neutral-300 text-neutral-200" : "border-lime-500 text-neutral-50"} transition rounded-8 flex w-fit items-center gap-2 border px-3 py-2 text-nowrap uppercase`}
+            className={`${isConversionDisabled ? "border-neutral-300 text-neutral-200" : "border-lime-500 text-neutral-50"} rounded-8 flex w-fit items-center gap-2 border px-3 py-2 text-nowrap uppercase transition`}
           >
             Log conversion
           </button>
