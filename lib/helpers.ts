@@ -77,6 +77,14 @@ export const formatTime = (timestamp: number) => {
   }
 };
 
+export const formatChartDate = (date: string) => {
+  const d = new Date(date);
+  return d.toLocaleDateString("en-us", {
+    month: "short",
+    day: "numeric",
+  });
+};
+
 export const calculateX = (
   index: number,
   pointsCount: number,
@@ -96,4 +104,3 @@ export const calculateY = (
   const y = height - t * height;
   return y;
 };
-
