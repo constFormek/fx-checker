@@ -4,57 +4,61 @@ import { useState } from "react";
 import Chart from "./Chart";
 import { CHARTS_PERIODS } from "@/lib/constants";
 import { useRatesHistory } from "@/lib/hooks/useRatesHistory";
-import { useRates } from "@/lib/hooks/useRates";
-import { calculateX, calculateY } from "@/lib/helpers";
+
+import { calculateChange, formatChartDate } from "@/lib/helpers";
+import ChangeIndicator, { getDirection, stylesMap } from "../ChangeIndicator";
+import { useCurrencies } from "@/lib/currenciesStore";
 
 export type PeriodType = (typeof CHARTS_PERIODS)[number];
 
 const History = () => {
   const [activePeriod, setActivePeriod] = useState<PeriodType>("1m");
-  const openRate = 0.8516;
-  const lastRate = 0.853;
-  const change = "+0.0014";
-  const changePercentage = "+0.16%";
-  const HistoryCardsMap = [
-    {
-      label: "Open",
-      data: openRate,
-    },
-    {
-      label: "Last",
-      data: lastRate,
-    },
-    {
-      label: "Change",
-      data: change,
-    },
-    {
-      label: "% Change",
-      data: changePercentage,
-    },
-  ];
-
   const { data, error, isPending } = useRatesHistory(activePeriod);
+  const pair = useCurrencies((s) => s.pair);
 
   if (isPending) return <span>ŁADOWANIE</span>;
   if (error || !data) return <span>BŁĄD</span>;
 
-  const chartsWidth = 600;
-  const chartsHeight = 300;
-  const pointsCount = data.length - 1;
+  const openRate = data[0].rate;
+  const lastRate = data[data.length - 1].rate;
 
-  const minRate = Math.min(...data.map((d) => d.rate));
-  const maxRate = Math.max(...data.map((d) => d.rate));
+  const changeObject = calculateChange(openRate, lastRate);
+  const direction = getDirection(changeObject.change);
 
-  const chartData = data.map((entry, index) => {
-    const x = calculateX(index, pointsCount, chartsWidth);
-    const y = calculateY(entry.rate, minRate, maxRate, chartsHeight);
-
-    return {
-      x: x,
-      y: y,
-    };
-  });
+  const HistoryCardsMap = [
+    {
+      label: "Open",
+      content: (
+        <p className="text-preset-2 text-neutral-50">{openRate.toFixed(4)}</p>
+      ),
+    },
+    {
+      label: "Last",
+      content: (
+        <p className="text-preset-2 text-neutral-50">{lastRate.toFixed(4)}</p>
+      ),
+    },
+    {
+      label: "Change",
+      content: (
+        <span
+          className={`${stylesMap[direction].color} text-preset-2 flex items-center`}
+        >
+          {stylesMap[direction].prefix}
+          {changeObject.change.toFixed(4)}
+        </span>
+      ),
+    },
+    {
+      label: "% Change",
+      content: (
+        <ChangeIndicator
+          changePercentage={changeObject.percentage}
+          className="text-preset-2"
+        />
+      ),
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-4">
@@ -69,7 +73,7 @@ const History = () => {
                 {card.label}
               </p>
 
-              <p className="text-preset-2 text-neutral-50">{card.data}</p>
+              {card.content}
             </div>
           ))}
         </div>
@@ -91,20 +95,22 @@ const History = () => {
 
       <div className="rounded-16 flex flex-col gap-5 border border-neutral-600 bg-neutral-700 px-3 py-4">
         <div className="flex w-full justify-between">
-          <p className="text-preset-3-medium">{"USD/EUR"}</p>
+          <p className="text-preset-3-medium">
+            {pair.base}/{pair.quote}
+          </p>
 
           <div className="text-preset-5 flex items-center text-neutral-200">
             <p className="before:mx-2 not-first:before:content-['·']">
-              {lastRate}
+              {lastRate.toFixed(4)}
             </p>
 
             <p className="before:mx-2 not-first:before:content-['·']">
-              {"MAY 14 16:00 CET"}
+              {formatChartDate(data[data.length - 1].date)} 16:00 CET
             </p>
           </div>
         </div>
 
-        <Chart chartData={chartData} width={chartsWidth} height={chartsHeight}/>
+        <Chart data={data} />
       </div>
     </div>
   );
