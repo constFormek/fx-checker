@@ -31,7 +31,12 @@ const Chart = ({ data, k = 3 }: ChartProps) => {
 
   const chartData = data.map((entry, index) => {
     const x = calculateX(index, pointsCount, plotWidth);
-    const y = calculateY(entry.rate, minRate, maxRate, plotHeight - strokeWidth);
+    const y = calculateY(
+      entry.rate,
+      minRate,
+      maxRate,
+      plotHeight - strokeWidth,
+    );
 
     return {
       x: x,
@@ -39,9 +44,11 @@ const Chart = ({ data, k = 3 }: ChartProps) => {
     };
   });
 
-  const dateLabelsIndexes = Array.from({ length: k }, (_, i) =>
+  const indexes = Array.from({ length: k }, (_, i) =>
     labelIndex(i, k, pointsCount),
   );
+
+  const dateLabelsIndexes = [...new Set(indexes)]
 
   const rateLabels = [minRate, (minRate + maxRate) / 2, maxRate];
 

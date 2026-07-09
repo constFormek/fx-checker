@@ -100,7 +100,9 @@ export const calculateY = (
   maxRate: number,
   height: number,
 ) => {
+  if (maxRate === minRate) return height / 2;
   const t = (rate - minRate) / (maxRate - minRate);
+
   const y = height - t * height;
   return y;
 };
