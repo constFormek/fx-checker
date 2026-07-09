@@ -49,10 +49,17 @@ export const TICKER_PAIRS = [
     base: "PLN",
     quote: "GBP",
   },
-
- 
 ];
 
-export const COMPARE_CODES = ["GBP", "JPY", "CHF", "CAD", "AUD", "INR", "CNY", "BDT"];
+export const COMPARE_CODES = [
+  "GBP",
+  "JPY",
+  "CHF",
+  "CAD",
+  "AUD",
+  "INR",
+  "CNY",
+  "BDT",
+];
 
 export const CHARTS_PERIODS = ["1d", "1w", "1m", "3m", "1y", "5y"] as const;

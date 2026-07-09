@@ -4,22 +4,36 @@ import { formatAmount, getPairSnapshot } from "@/lib/helpers";
 import Image from "next/image";
 import FavoriteButton from "./FavoriteButton";
 import { useRates } from "@/lib/hooks/useRates";
+import { useShallow } from "zustand/shallow";
+import ErrorMessage from "./ErrorMessage";
 
 const Compare = () => {
   const { data, error, isPending } = useRates();
 
-  const list = useCurrencies((s) => s.list);
+  const { list, base, setPair } = useCurrencies(
+    useShallow((s) => ({
+      list: s.list,
+      base: s.pair.base,
+      setPair: s.setPair,
+    })),
+  );
   const amount = useCurrencies((s) => {
     const n = Number(s.amount);
     return n > 0 ? n : null;
   });
 
-  const base = useCurrencies((s) => s.pair.base);
+  if (amount === null)
+    return (
+      <ErrorMessage
+        label="No comparision available"
+        text="Enter an amount in SEND above to see what your money is worth in other currencies."
+      />
+    );
 
   if (isPending) return <span>ŁADOWANIE</span>;
   if (error) return <span>BŁĄD</span>;
-
   if (list.length === 0) return null;
+
   const compareCurrencies = COMPARE_CODES.filter((code) => code !== base).map(
     (code) => {
       const currency = list.find((c) => c.iso_code === code);
@@ -41,6 +55,14 @@ const Compare = () => {
     },
   );
 
+  const handleClick = (quoteCode: string) => {
+    setPair(base, quoteCode);
+    const behavior = matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    window.scrollTo({ top: 0, behavior: behavior });
+  };
+
   const displayAmount = amount === null ? "-" : formatAmount(amount);
 
   return (
@@ -60,25 +82,31 @@ const Compare = () => {
         {compareCurrencies.map((entry) => (
           <div
             key={entry.iso_code}
-            className="rounded-10 flex items-center gap-2.5 border border-neutral-500 bg-neutral-600 p-3"
+            className="rounded-10 relative flex items-center border border-neutral-500 bg-neutral-600 pr-3"
           >
-            <Image
-              src={entry.flag}
-              width={24}
-              height={24}
-              alt=""
-              className="rounded-full"
-            />
+            <button
+              onClick={() => {
+                handleClick(entry.iso_code);
+              }}
+              aria-label={`Load ${base}/${entry.iso_code} to converter`}
+              className="rounded-10 peer flex grow items-center gap-2.5 p-3 text-left focus-visible:outline-none"
+            >
+              <Image
+                src={entry.flag}
+                width={24}
+                height={24}
+                alt=""
+                className="rounded-full"
+              />
 
-            <div className="flex grow flex-col gap-1.5">
-              <p className="text-preset-5 text-neutral-50 uppercase">
-                {entry.iso_code}
-              </p>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-preset-4 text-neutral-50 uppercase">
+                  {entry.iso_code}
+                </p>
 
-              <p className="text-preset-5 text-neutral-200">{entry.name}</p>
-            </div>
+                <p className="text-preset-5 text-neutral-200">{entry.name}</p>
+              </div>
 
-            <div className="flex shrink-0 gap-2.5">
               <div className="flex grow flex-col items-end gap-1.5">
                 <p className="text-preset-3 text-neutral-50 uppercase">
                   {entry.convertedAmount}
@@ -88,9 +116,11 @@ const Compare = () => {
                   @ {entry.todaysRate.toFixed(4)}
                 </p>
               </div>
+            </button>
 
-              <FavoriteButton pair={{ base: base, quote: entry.iso_code }} />
-            </div>
+            <span className="rounded-10 pointer-events-none absolute -inset-0.75 peer-focus-visible:outline-2 peer-focus-visible:outline-lime-500" />
+
+            <FavoriteButton pair={{ base: base, quote: entry.iso_code }} />
           </div>
         ))}
       </div>

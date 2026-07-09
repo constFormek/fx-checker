@@ -53,7 +53,7 @@ const MobileMenu = ({ activeTabId, setActiveTabId }: MobileMenuProps) => {
 
   if (!activeTab) return null;
   return (
-    <div className="relative block md:hidden">
+    <div className="relative block md:hidden z-0">
       <button
         onClick={() => {
           setIsOpen(!isOpen);
@@ -71,7 +71,7 @@ const MobileMenu = ({ activeTabId, setActiveTabId }: MobileMenuProps) => {
         role="listbox"
         aria-label="Tabs"
         aria-activedescendant={tabId(id, activeTabId)}
-        className={`${isOpen ? "absolute" : "hidden"} rounded-10 right-0 left-0 z-100 mt-2 flex max-h-122 flex-col border border-neutral-600 bg-neutral-700 p-2`}
+        className={`${isOpen ? "absolute" : "hidden"} rounded-10 right-0 left-0 z-20 mt-2 flex max-h-122 flex-col border border-neutral-600 bg-neutral-700 p-2`}
       >
         {TabsConfig.map((tab) => (
           <div

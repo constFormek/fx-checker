@@ -1,25 +1,18 @@
 import { useCurrencies } from "@/lib/currenciesStore";
 import LogItem from "./LogItem";
+import ErrorMessage from "./ErrorMessage";
 
 const Logs = () => {
   const logs = useCurrencies((s) => s.logs);
   const clearLogs = useCurrencies((s) => s.clearLogs);
-  if (logs.length === 0) {
+  if (logs.length === 0)
     return (
-      <div className="flex flex-col items-center gap-4 py-10 text-center">
-        <h3 className="text-preset-2 text-neutral-100">
-          No conversions logged yet
-        </h3>
-
-        <p className="text-preset-4 max-w-115 text-neutral-200">
-          Every conversion is recorded here automatically when you tap LOG
-          CONVERSION.
-          <br />
-          Your log is private to this session and this browser
-        </p>
-      </div>
+      <ErrorMessage
+        label="No conversions logged yet"
+        text="Every conversion is recorded here automatically when you tap LOG CONVERSION. Your log is private to this session and this browser."
+      />
     );
-  }
+
   return (
     <div className="rounded-16 flex w-full flex-col gap-4 border border-neutral-600 bg-neutral-700 p-4">
       <div className="flex w-full items-center justify-between uppercase">
@@ -38,14 +31,14 @@ const Logs = () => {
       </div>
 
       <div className="flex flex-col gap-3">
-        {logs.map((entry) => (
+        {logs.map((log) => (
           <LogItem
-            key={entry.id}
-            id={entry.id}
-            sendAmount={entry.sendAmount}
-            pair={entry.pair}
-            timestamp={entry.timestamp}
-            receiveAmount={entry.receiveAmount}
+            key={log.id}
+            id={log.id}
+            sendAmount={log.sendAmount}
+            pair={log.pair}
+            timestamp={log.timestamp}
+            receiveAmount={log.receiveAmount}
           />
         ))}
       </div>

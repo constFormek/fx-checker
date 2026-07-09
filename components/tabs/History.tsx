@@ -8,6 +8,7 @@ import { useRatesHistory } from "@/lib/hooks/useRatesHistory";
 import { calculateChange, formatChartDate } from "@/lib/helpers";
 import ChangeIndicator, { getDirection, stylesMap } from "../ChangeIndicator";
 import { useCurrencies } from "@/lib/currenciesStore";
+import ErrorMessage from "./ErrorMessage";
 
 export type PeriodType = (typeof CHARTS_PERIODS)[number];
 
@@ -17,7 +18,13 @@ const History = () => {
   const pair = useCurrencies((s) => s.pair);
 
   if (isPending) return <span>ŁADOWANIE</span>;
-  if (error || !data) return <span>BŁĄD</span>;
+  if (error || !data)
+    return (
+      <ErrorMessage
+        label="No chart data available"
+        text={`We couldn't load rate history for ${pair.base}/${pair.quote} right now. This usually clears up in a minute.`}
+      />
+    );
 
   const openRate = data[0].rate;
   const lastRate = data[data.length - 1].rate;

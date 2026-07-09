@@ -3,6 +3,7 @@ import { useCurrencies } from "@/lib/currenciesStore";
 import { useRates } from "@/lib/hooks/useRates";
 import { getPairSnapshot } from "@/lib/helpers";
 import FavoriteItem from "./FavoriteItem";
+import ErrorMessage from "./ErrorMessage";
 
 const Favorites = () => {
   const favorites = useCurrencies((s) => s.favorites);
@@ -20,18 +21,14 @@ const Favorites = () => {
     };
   });
 
-  if (favorites.length === 0) {
+  if (favorites.length === 0)
     return (
-      <div className="flex flex-col items-center gap-4 py-10 text-center">
-        <h3 className="text-preset-2 text-neutral-100">No pinned pairs yet</h3>
-
-        <p className="text-preset-4 max-w-115 text-neutral-200">
-          Pin a pair to track its rate here. Tap the star icon on any conversion
-          or comparision row.
-        </p>
-      </div>
+      <ErrorMessage
+        label="No pinned pairs yet"
+        text="Pin a pair to track its rate here. Tap the star icon on any conversion or comparision row."
+      />
     );
-  }
+
   return (
     <div className="rounded-16 flex w-full flex-col gap-4 border border-neutral-600 bg-neutral-700 p-4">
       <div className="flex w-full items-center justify-between uppercase">
