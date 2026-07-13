@@ -2,22 +2,23 @@
 
 import { TICKER_PAIRS } from "@/lib/constants";
 import { favoriteEntryId, getPairSnapshot } from "@/lib/helpers";
-import { useCurrencies } from "@/lib/hooks/useCurrencies";
-import Icon from "./Icon";
+import { useRates } from "@/lib/hooks/useRates";
+
+import ChangeIndicator from "./ChangeIndicator";
 
 const Ticker = () => {
-  const { data, error, isPending } = useCurrencies();
+  const { data, error, isPending } = useRates();
 
   if (isPending) return <span>ŁADOWANIE</span>;
   if (error) return <span>BŁĄD</span>;
 
-  const datesArray = Object.keys(data);
   const tickerArray = TICKER_PAIRS.map((entry) => {
     return {
-      ...getPairSnapshot(data, datesArray, entry.base, entry.quote),
+      ...getPairSnapshot(data, entry.base, entry.quote),
       pair: { base: entry.base, quote: entry.quote },
     };
   });
+
   return (
     <div className="text-preset-6 md:text-preset-5-medium flex items-center">
       <div className="flex items-center gap-2 bg-lime-500 px-2 py-3 text-neutral-900 uppercase md:px-4 md:py-3">
@@ -62,29 +63,12 @@ interface TickerItemProps {
   isCopy?: boolean;
 }
 
-const stylesMap = {
-  up: {
-    color: "text-green-500",
-    prefix: "+",
-    Icon: <Icon name="chevron-down" size={12} className="rotate-180" />,
-  },
-  down: {
-    color: "text-red-500",
-    prefix: "",
-    Icon: <Icon name="chevron-down" size={12} className="rotate-0" />,
-  },
-  flat: { color: "text-neutral-200", prefix: "", Icon: <></> },
-};
-
 export const TickerItem = ({
   rate,
   pair,
   changePercentage,
   isCopy,
 }: TickerItemProps) => {
-  const direction =
-    changePercentage > 0 ? "up" : changePercentage < 0 ? "down" : "flat";
-
   return (
     <div
       aria-hidden={isCopy}
@@ -94,15 +78,10 @@ export const TickerItem = ({
         {pair.base}/{pair.quote}
       </p>
 
-      <p className="text-neutral-50">{rate.toFixed(2)}</p>
+      <div className="flex items-center gap-1.5">
+        <p className="text-preset-5-medium">{rate.toFixed(2)}</p>
 
-      <div className={`${stylesMap[direction].color} flex items-center gap-1`}>
-        {stylesMap[direction].Icon}
-
-        <span>
-          {stylesMap[direction].prefix}
-          {changePercentage.toFixed(2)}%
-        </span>
+        <ChangeIndicator changePercentage={changePercentage} />
       </div>
     </div>
   );

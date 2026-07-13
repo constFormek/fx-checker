@@ -6,13 +6,16 @@ import { INITIAL_PAIR } from "@/lib/constants";
 import {
   fetchCurrenciesData,
   fetchExchangeRate,
-  fetchDailyRate
 } from "@/lib/currencyApi";
-
 import { readdirSync } from "fs";
+
 import path from "path";
 
 export default async function Home() {
+  const initialData = await fetchExchangeRate({
+    base: INITIAL_PAIR.base,
+    quote: INITIAL_PAIR.quote,
+  });
   const flagFiles = readdirSync(
     path.join(process.cwd(), "public/images/flags"),
   );
@@ -33,14 +36,6 @@ export default async function Home() {
         flag: `/images/flags/${c.iso_code.slice(0, 2).toLocaleLowerCase()}.webp`,
       };
     });
-
-  const initialData = await fetchExchangeRate({
-    base: INITIAL_PAIR.base,
-    quote: INITIAL_PAIR.quote,
-  });
-
-  const fetchTiker = await fetchDailyRate();
-  console.log(fetchTiker);
   return (
     <>
       <Header currenciesCount={supportedCurrencies.length} />

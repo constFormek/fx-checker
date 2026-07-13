@@ -36,6 +36,7 @@ const CurrencyInput = ({
 
       <div className="flex w-full items-center justify-between">
         <input
+          maxLength={10}
           id={variant}
           className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} ' text-preset-1 w-7/10 max-w-7/10 font-bold outline-none`}
           type="text"

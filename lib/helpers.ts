@@ -14,10 +14,10 @@ export const favoriteEntryId = (base: string, quote: string) => {
 
 export const getPairSnapshot = (
   data: GroupedRates,
-  dates: string[],
   from: string,
   to: string,
 ) => {
+  const dates = Object.keys(data);
   const todaysRate = crossRate(data[dates[1]], from, to);
   const yesterdaysRate = crossRate(data[dates[0]], from, to);
 
@@ -47,3 +47,53 @@ export const calculateChange = (old: number, newer: number) => {
     percentage: percentage,
   };
 };
+
+export const formatAmount = (number: number) => {
+  return number.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+};
+
+export const formatTime = (timestamp: number) => {
+  const msElapsed = Date.now() - timestamp;
+
+  const SECOND = 1000;
+  const MINUTE = SECOND * 60;
+  const HOUR = MINUTE * 60;
+  const DAY = HOUR * 24;
+  const WEEK = DAY * 7;
+
+  if (msElapsed < MINUTE) return "now";
+  else if (msElapsed < HOUR) {
+    return `${Math.floor(msElapsed / MINUTE)}M`;
+  } else if (msElapsed < DAY) {
+    return `${Math.floor(msElapsed / HOUR)}H`;
+  } else if (msElapsed < WEEK) {
+    return `${Math.floor(msElapsed / DAY)}D`;
+  } else {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  }
+};
+
+export const calculateX = (
+  index: number,
+  pointsCount: number,
+  width: number,
+) => {
+  const t = index / pointsCount;
+  const x = t * width;
+  return x;
+};
+export const calculateY = (
+  rate: number,
+  minRate: number,
+  maxRate: number,
+  height: number,
+) => {
+  const t = (rate - minRate) / (maxRate - minRate);
+  const y = height - t * height;
+  return y;
+};
+
