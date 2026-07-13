@@ -32,12 +32,14 @@ const Favorites = () => {
   return (
     <div className="rounded-16 flex w-full flex-col gap-4 border border-neutral-600 bg-neutral-700 p-4">
       <div className="flex w-full items-center justify-between uppercase">
-        <p className="text-preset-3-medium">Pinned pairs</p>
+        <h2 className="text-preset-3-medium">Pinned pairs</h2>
 
-        <p className="text-preset-5">{favorites.length} Favorites</p>
+        <p className="text-preset-5 text-neutral-200">
+          {favorites.length} Favorite{favorites.length > 1 && "s"}
+        </p>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-3">
         {favoritesEntries.map((entry) => (
           <FavoriteItem
             key={entry.id}
@@ -46,7 +48,7 @@ const Favorites = () => {
             changePercentage={entry.changePercentage}
           />
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
