@@ -39,6 +39,7 @@ const LogItem = ({
         </div>
 
         <button
+        aria-label={`Delete log: ${pair.base}/${pair.quote}, send: ${sendAmount}, receive: ${receiveAmount}, created ${timeElapsed}`}
           onClick={() => {
             deleteLog(id);
           }}
