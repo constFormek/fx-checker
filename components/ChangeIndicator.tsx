@@ -1,3 +1,4 @@
+import { formatChange } from "@/lib/helpers";
 import Icon from "./Icon";
 
 export const stylesMap = {
@@ -8,14 +9,10 @@ export const stylesMap = {
   },
   down: {
     color: "text-red-500",
-    prefix: "",
+    prefix: "-",
     Icon: <Icon name="chevron-down" className="h-[1em] w-[1em] rotate-0" />,
   },
   flat: { color: "text-neutral-200", prefix: "", Icon: <></> },
-};
-
-export const getDirection = (change: number) => {
-  return change > 0 ? "up" : change < 0 ? "down" : "flat";
 };
 
 interface changeIndicatorProps {
@@ -27,18 +24,15 @@ const ChangeIndicator = ({
   changePercentage,
   className,
 }: changeIndicatorProps) => {
-  const direction = getDirection(changePercentage);
-
+  const change = formatChange(changePercentage, 2);
+  const direction = change.direction;
   return (
     <div
-      className={`${stylesMap[direction].color} ${className ?? "text-preset-6"} flex items-center`}
+      className={`${stylesMap[direction].color} ${className ?? "text-preset-6"} flex items-center gap-1`}
     >
       {stylesMap[direction].Icon}
 
-      <span>
-        {stylesMap[direction].prefix}
-        {changePercentage.toFixed(2)}%
-      </span>
+      {change.text}
     </div>
   );
 };

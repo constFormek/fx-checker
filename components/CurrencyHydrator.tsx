@@ -13,11 +13,11 @@ const CurrencyHydrator = ({ availableCurrencies }: CurrencyHydratorProps) => {
 
   useEffect(() => {
     useCurrencies.persist.rehydrate();
-  }, [])
+  }, []);
 
   useEffect(() => {
     hydrateCurrencies(availableCurrencies);
-  }, [hydrateCurrencies, availableCurrencies]); // for linting errors
+  }, [hydrateCurrencies, availableCurrencies]);
 
   return null;
 };

@@ -9,6 +9,7 @@ interface HeaderProps {
 const Header = ({ currenciesCount }: HeaderProps) => {
   return (
     <header className="flex w-full flex-col">
+      <h1 className="sr-only">Foreign currency converter</h1>
       <div className="flex justify-between p-4 md:px-6 md:py-5">
         <Image
           src={logoPath}
