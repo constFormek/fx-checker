@@ -79,27 +79,49 @@ export const fetchDailyRate = async (
   );
 };
 
-const PERIODS: Record<PeriodType, number> = {
-  "1d": 1,
-  "1w": 7,
-  "1m": 30,
-  "3m": 90,
-  "1y": 365,
-  "5y": 1825,
+type Period = {
+  days: number;
+  sessionsCount: number;
+};
+
+const PERIODS: Record<PeriodType, Period> = {
+  "1d": {
+    days: 1,
+    sessionsCount: 2,
+  },
+  "1w": {
+    days: 7,
+    sessionsCount: 6,
+  },
+  "1m": {
+    days: 30,
+    sessionsCount: 23,
+  },
+  "3m": {
+    days: 90,
+    sessionsCount: 13,
+  },
+  "1y": {
+    days: 365,
+    sessionsCount: 13,
+  },
+  "5y": {
+    days: 1825,
+    sessionsCount: 61,
+  },
 };
 
 export const fetchHistoryRate = async (period: PeriodType, pair: Pair) => {
-  const days = PERIODS[period];
+  const { days, sessionsCount } = PERIODS[period];
   const group = days >= 365 ? "month" : days >= 90 ? "week" : null;
   const groupPart = group !== null ? `&group=${group}` : "";
 
   const from = daysAgo(days + 7);
-
   const url = `https://api.frankfurter.dev/v2/rates?base=${pair.base}&from=${from}&quotes=${pair.quote}${groupPart}`;
 
   const all = await fetchHelper<ExchangeObject[]>(url);
-  const start = daysAgo(days);
-  const rows = all.filter((r) => r.date >= start);
+  const rows = all.slice(-sessionsCount);
+  if (rows.length < 2) throw new Error("Not enough data");
 
   const chartData: ChartData = rows.map((entry) => {
     return {

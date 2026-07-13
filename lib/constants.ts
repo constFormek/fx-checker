@@ -49,6 +49,37 @@ export const TICKER_PAIRS = [
     base: "PLN",
     quote: "GBP",
   },
+
+   {
+    base: "AUS",
+    quote: "GBP",
+  },
+
+   {
+    base: "CHF",
+    quote: "KRW",
+  },
+
+   {
+    base: "KRW",
+    quote: "EUR",
+  },
+
+   {
+    base: "USD",
+    quote: "KRW",
+  },
+
+   {
+    base: "EUR",
+    quote: "INR",
+  },
+
+   {
+    base: "USD",
+    quote: "INR",
+  },
+
 ];
 
 export const COMPARE_CODES = [
