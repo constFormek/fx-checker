@@ -11,10 +11,10 @@ export const getRateBounds = (data: ChartData) => {
   const minRate = Math.min(...data.map((d) => d.rate));
   const maxRate = Math.max(...data.map((d) => d.rate));
 
-  return {
-    min: minRate,
-    max: maxRate,
-  };
+  const span = maxRate - minRate;
+  const padded = { min: minRate - span * 0.1, max: maxRate + span * 0.1 };
+
+  return padded
 };
 
 export const formatChartDate = (date: string) => {

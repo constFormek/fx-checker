@@ -56,12 +56,13 @@ const Chart = ({ data, pair }: ChartProps) => {
 
       <div
         ref={containerRef}
-        className="w-full"
+        className="relative w-full"
         style={{ height: chartWidth ? chartHeight : undefined }}
       >
         {chartWidth > 0 &&
           (data.length > 0 ? (
             <ChartSvg
+              pair={pair}
               chartWidth={chartWidth}
               data={data}
               ratio={chartView.ratio}
