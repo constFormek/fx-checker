@@ -40,6 +40,11 @@ export const crossRate = (
 };
 
 export const calculateChange = (old: number, newer: number) => {
+  if (old === 0) return {
+    change: 0,
+    percentage: 0,
+  }
+  
   const change = newer - old;
   const percentage = ((newer - old) / old) * 100;
 
