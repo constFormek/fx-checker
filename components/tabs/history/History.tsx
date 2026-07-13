@@ -34,7 +34,7 @@ const History = () => {
           {rates.length > 0 && !isPending ? (
             <HistoryStats data={rates} />
           ) : (
-            <HistoryStatsEmpty isPending={isPending} />
+            <HistoryStatsEmpty />
           )}
         </div>
 
