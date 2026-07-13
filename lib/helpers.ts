@@ -1,5 +1,6 @@
 import { TabType } from "@/components/tabs/config";
 import { GroupedRates } from "./currencyApi";
+import { stylesMap } from "@/components/ChangeIndicator";
 
 export const optionId = (prefix: string, code: string) =>
   `${prefix}-option-${code}`;
@@ -48,6 +49,27 @@ export const calculateChange = (old: number, newer: number) => {
   };
 };
 
+export type DirectionType = "flat" | "down" | "up";
+
+export const getDirection = (change: number): DirectionType => {
+  return change > 0 ? "up" : change < 0 ? "down" : "flat";
+};
+
+export const formatChange = (
+  value: number,
+  dp: number,
+): {
+  direction: DirectionType;
+  text: string;
+} => {
+  const shown = Number(value.toFixed(dp));
+  const direction = getDirection(shown);
+  return {
+    direction: direction,
+    text: `${stylesMap[direction].prefix}${Math.abs(shown).toFixed(dp)}`,
+  };
+};
+
 export const formatAmount = (number: number) => {
   return number.toLocaleString("en-US", {
     minimumFractionDigits: 0,
@@ -75,34 +97,4 @@ export const formatTime = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
   }
-};
-
-export const formatChartDate = (date: string) => {
-  const d = new Date(date);
-  return d.toLocaleDateString("en-us", {
-    month: "short",
-    day: "numeric",
-  });
-};
-
-export const calculateX = (
-  index: number,
-  pointsCount: number,
-  width: number,
-) => {
-  const t = index / pointsCount;
-  const x = t * width;
-  return x;
-};
-export const calculateY = (
-  rate: number,
-  minRate: number,
-  maxRate: number,
-  height: number,
-) => {
-  if (maxRate === minRate) return height / 2;
-  const t = (rate - minRate) / (maxRate - minRate);
-
-  const y = height - t * height;
-  return y;
 };
