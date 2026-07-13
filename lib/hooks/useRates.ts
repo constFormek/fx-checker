@@ -7,7 +7,7 @@ export function useRates() {
     const currencies = useCurrencies(s => s.list);
     return useQuery({
         // supportedCodes omitted from the key: static for the app's lifetime
-        queryKey: ["daily-rate", "EUR", "2d"],
+        queryKey: ["daily-rate", "EUR", "2d", currencies],
         queryFn: () => fetchDailyRate(currencies.map(c => c.iso_code)),
         staleTime: 60 * 60 * 1000,
     })

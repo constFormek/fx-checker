@@ -51,7 +51,7 @@ export const TICKER_PAIRS = [
   },
 
    {
-    base: "AUS",
+    base: "AUD",
     quote: "GBP",
   },
 

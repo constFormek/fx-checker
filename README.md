@@ -123,9 +123,10 @@ When something got genuinely complex and overwhelming, I switched approach and a
 ## Author
 
 Oscar ConstFormek
-- Website - [Github](https://github.com/constFormek)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
+- Website - [Fx Checker](https://fx-checker-pkil.vercel.app/)
+- Repository - [Github](https://github.com/constFormek)
+- Frontend Mentor - [@constFormek](https://www.frontendmentor.io/profile/constFormek)
+
 
 
 

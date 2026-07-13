@@ -22,7 +22,7 @@ const TabsList = ({ activeTabId, setActiveTabId, counts }: TabsListProps) => {
         {TabsConfig.map((tab) => {
           const tabCount = counts[tab.id];
           return (
-            <div key={tab.id} className="relative">
+            <div key={tab.id} id={tab.label} className="relative" role="tabpanel" aria-labelledby={tab.label}>
               <button
                 role="tab"
                 aria-selected={activeTabId === tab.id}
