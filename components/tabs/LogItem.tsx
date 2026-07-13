@@ -20,7 +20,7 @@ const LogItem = ({
   const timeElapsed = formatTime(timestamp);
   const deleteLog = useCurrencies((s) => s.deleteLog);
   return (
-    <div className="rounded-10 flex w-full items-center justify-between border border-neutral-500 bg-neutral-600 px-4 py-3">
+    <li className="rounded-10 flex w-full items-center justify-between border border-neutral-500 bg-neutral-600 px-4 py-3">
       <div className="flex flex-col gap-2 md:flex-row">
         <p className="max-w-16 text-neutral-200">{timeElapsed}</p>
 
@@ -42,12 +42,12 @@ const LogItem = ({
           onClick={() => {
             deleteLog(id);
           }}
-          className="rounded-8 border border-neutral-500 bg-neutral-600 p-2 text-neutral-50"
+          className="rounded-8 cursor-pointer border border-neutral-500 bg-neutral-600 p-2 text-neutral-50 transition-colors hover:bg-neutral-500 focus-visible:outline-1 focus-visible:outline-offset-[2.5px] focus-visible:outline-lime-500"
         >
           <Icon name="delete" size={16} />
         </button>
       </div>
-    </div>
+    </li>
   );
 };
 

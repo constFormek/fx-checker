@@ -1,6 +1,7 @@
-import { PeriodType } from "@/components/tabs/History";
+import { PeriodType } from "@/components/tabs/history/History";
 import { Pair } from "./currenciesStore";
 import { fetchHelper } from "./fetchHelper";
+import { ChartData } from "@/components/tabs/history/helpers";
 
 interface fetchExchangeRateProps {
   base: string;
@@ -32,12 +33,19 @@ export const fetchCurrenciesData = () => {
 
 export type GroupedRates = Record<string, Record<string, number>>;
 
+const toISODate = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+const daysAgo = (n: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return toISODate(d);
+};
+
 export const fetchDailyRate = async (
   supportedCurrencies: string[],
 ): Promise<GroupedRates> => {
-  const d = new Date();
-  d.setDate(d.getDate() - 7); // 7-day window: survives weekend + holiday + one incomplete day
-  const from = d.toISOString().slice(0, 10);
+  const from = daysAgo(7);
 
   const url = `https://api.frankfurter.dev/v2/rates?from=${from}&base=EUR`;
   const rows = await fetchHelper<ExchangeObject[]>(url);
@@ -71,39 +79,51 @@ export const fetchDailyRate = async (
   );
 };
 
+type Period = {
+  days: number;
+  sessionsCount: number;
+};
+
+const PERIODS: Record<PeriodType, Period> = {
+  "1d": {
+    days: 1,
+    sessionsCount: 2,
+  },
+  "1w": {
+    days: 7,
+    sessionsCount: 6,
+  },
+  "1m": {
+    days: 30,
+    sessionsCount: 23,
+  },
+  "3m": {
+    days: 90,
+    sessionsCount: 13,
+  },
+  "1y": {
+    days: 365,
+    sessionsCount: 13,
+  },
+  "5y": {
+    days: 1825,
+    sessionsCount: 61,
+  },
+};
+
 export const fetchHistoryRate = async (period: PeriodType, pair: Pair) => {
-  let days = 0;
+  const { days, sessionsCount } = PERIODS[period];
+  const group = days >= 365 ? "month" : days >= 90 ? "week" : null;
+  const groupPart = group !== null ? `&group=${group}` : "";
 
-  switch (period) {
-    case "1d":
-      days = 1;
-      break;
-    case "1w":
-      days = 7;
-      break;
-    case "1m":
-      days = 30;
-      break;
-    case "3m":
-      days = 90;
-      break;
-    case "1y":
-      days = 12 * 30;
-      break;
-    case "5y":
-      days = 12 * 30 * 5;
-      break;
-  }
+  const from = daysAgo(days + 7);
+  const url = `https://api.frankfurter.dev/v2/rates?base=${pair.base}&from=${from}&quotes=${pair.quote}${groupPart}`;
 
-  const d = new Date();
-  d.setDate(d.getDate() - days);
-  const fromUrl = d.toISOString().slice(0, 10);
+  const all = await fetchHelper<ExchangeObject[]>(url);
+  const rows = all.slice(-sessionsCount);
+  if (rows.length < 2) throw new Error("Not enough data");
 
-  const url = `https://api.frankfurter.dev/v2/rates?base=${pair.base}&from=${fromUrl}&quotes=${pair.quote}`;
-
-  const data = await fetchHelper<ExchangeObject[]>(url);
-
-  const chartData = data.map((entry) => {
+  const chartData: ChartData = rows.map((entry) => {
     return {
       date: entry.date,
       rate: entry.rate,

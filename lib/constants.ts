@@ -50,9 +50,59 @@ export const TICKER_PAIRS = [
     quote: "GBP",
   },
 
- 
+   {
+    base: "AUS",
+    quote: "GBP",
+  },
+
+   {
+    base: "CHF",
+    quote: "KRW",
+  },
+
+   {
+    base: "KRW",
+    quote: "EUR",
+  },
+
+   {
+    base: "USD",
+    quote: "KRW",
+  },
+
+   {
+    base: "EUR",
+    quote: "INR",
+  },
+
+   {
+    base: "USD",
+    quote: "INR",
+  },
+
 ];
 
-export const COMPARE_CODES = ["GBP", "JPY", "CHF", "CAD", "AUD", "INR", "CNY", "BDT"];
+export const COMPARE_CODES = [
+  "GBP",
+  "JPY",
+  "CHF",
+  "CAD",
+  "AUD",
+  "INR",
+  "CNY",
+  "BDT",
+];
 
 export const CHARTS_PERIODS = ["1d", "1w", "1m", "3m", "1y", "5y"] as const;
+export const CHART_STAT_LABELS = [
+  "Open",
+  "Last",
+  "Change",
+  "% Change",
+] as const;
+export const LABEL_GAP = 16;
+export const FONT_SIZE = 10;
+export const STROKE_WIDTH = 2;
+export const TEXT_WIDTH = 60;
+
+export const FAVORITES_LIMIT = 99;

@@ -3,16 +3,21 @@
 import { useCurrencies } from "@/lib/currenciesStore";
 import Icon from "../Icon";
 import { favoriteEntryId } from "@/lib/helpers";
+import { useShallow } from "zustand/shallow";
+import { FAVORITES_LIMIT } from "@/lib/constants";
 
 interface FavoriteButtonProps {
   pair: { base: string; quote: string };
 }
 const FavoriteButton = ({ pair }: FavoriteButtonProps) => {
   const id = favoriteEntryId(pair.base, pair.quote);
-  const toggleFavorite = useCurrencies((s) => s.toggleFavorite);
-  const isFavorite = useCurrencies((s) =>
-    s.favorites.some((f) => f.id === id),
+  const { toggleFavorite, isFavorite } = useCurrencies(
+    useShallow((s) => ({
+      toggleFavorite: s.toggleFavorite,
+      isFavorite: s.favorites.some((f) => f.id === id),
+    })),
   );
+
   return (
     <button
       aria-label={
@@ -27,7 +32,7 @@ const FavoriteButton = ({ pair }: FavoriteButtonProps) => {
           quote: pair.quote,
         });
       }}
-      className={`${isFavorite ? "border-lime-500 text-lime-500" : "border-neutral-500 text-neutral-50"} rounded-8 border p-2`}
+      className={`${isFavorite ? "border-lime-500 text-lime-500" : "border-neutral-500 text-neutral-50"} rounded-8 cursor-pointer border p-2 hover:bg-neutral-400 focus-visible:border-neutral-500 focus-visible:outline-1 focus-visible:outline-offset-[2.5px] focus-visible:outline-lime-500`}
     >
       {isFavorite ? (
         <Icon name="star-filled" size={16} />

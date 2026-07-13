@@ -93,8 +93,11 @@ export const useCurrencies = create<CurrenciesStore>()(
           sendAmount: sendAmount,
           receiveAmount: receiveAmount,
         };
+
+        const newLogs = [newEntry, ...logs].slice(0, 99);
+
         set({
-          logs: [newEntry, ...logs],
+          logs: newLogs,
         });
       },
 
@@ -126,7 +129,7 @@ export const useCurrencies = create<CurrenciesStore>()(
       name: "state",
       partialize: (state) => ({
         pair: state.pair,
-        favoritesList: state.favorites,
+        favorites: state.favorites,
         logs: state.logs,
       }),
       skipHydration: true,

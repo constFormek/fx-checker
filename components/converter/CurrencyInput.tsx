@@ -26,7 +26,7 @@ const CurrencyInput = ({
   };
 
   return (
-    <div className="rounded-16 md:rounded-20 relative flex w-full flex-col justify-between gap-5 border border-neutral-500 bg-neutral-600 p-4 md:p-5">
+    <div className="rounded-16 md:rounded-20 relative flex w-full flex-col justify-between gap-5 border border-neutral-500 bg-neutral-600 p-4 md:gap-4 md:p-5">
       <label
         htmlFor={variant}
         className="text-preset-4 text-neutral-100 uppercase"
@@ -34,11 +34,11 @@ const CurrencyInput = ({
         {variant === "base" ? "Send" : "Receive"}
       </label>
 
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between gap-2">
         <input
           maxLength={10}
           id={variant}
-          className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} ' text-preset-1 w-7/10 max-w-7/10 font-bold outline-none`}
+          className={`${variant === "quote" ? "text-lime-500 placeholder:text-lime-500" : "text-neutral-50 placeholder:text-neutral-50"} text-preset-1 focus-visible:rounded-16 w-7/10 max-w-7/10 border-b border-b-transparent font-bold outline-lime-500 transition-colors hover:border-b-neutral-200 focus-visible:outline-2`}
           type="text"
           placeholder={"-"}
           onChange={(e) => handleChange(e)}

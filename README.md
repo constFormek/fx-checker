@@ -1,202 +1,131 @@
-# Frontend Mentor - FX Checker
+# Frontend Mentor - FX Checker solution
 
-![Design preview for the FX Checker coding challenge](./preview.jpg)
+This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
 
-## Welcome! 👋
+## Table of contents
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [What I Learned](#what-i-learned)
+  - [Key Decisions](#key-decisions)
+  - [Engineering Problems](#engineering-problems)
+  - [Known Limitations](#known-limitations)
+  - [AI Collaboration](#ai-collaboration)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-This challenge is part of the **Frontend Mentor 30-Day Hackathon**, so for the next 30 days it's free for everyone, including free access to the Figma design file. [Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects, and this one makes a great portfolio piece.
+### Screenshot
 
-**To do this challenge, you need a good understanding of HTML, CSS, and JavaScript, plus some experience working with a REST API.**
+![](./screenshot.jpg)
 
-## 🏆 FM30 Hackathon
+### Links
 
-For the 30 days of the hackathon, FX Checker is **free+**: the starter code and the Figma design are free for everyone. After the hackathon it becomes a premium challenge.
+- Solution URL: (https://your-solution-url.com)
+- Github Project (https://github.com/constFormek/fx-checker)
+- Live Site URL: (https://your-live-site-url.com)
 
-- **Submit your entry** by posting your solution on the Frontend Mentor platform, then sharing your solution-page link in the **#hackathon-submissions** channel on our [Discord community](https://www.frontendmentor.io/community), in the FX Checker thread.
-- **Every entry needs a complete README** (the `README-template.md` in this starter is a good base) to count as a valid submission.
-- **Prizes:** 1st place gets a one-year Pro subscription, 2nd and 3rd each get a one-month Pro subscription.
-- Share your progress as you build with the **#FM30Hackathon** hashtag. We'll be watching and resharing our favorites.
+## My process
 
-[Read the full hackathon rules, dates, and judging details here](https://www.frontendmentor.io/articles/fm30-hackathon-currency-converter).
 
-## The challenge
+Jasne. Copyedit, nie przepisywanie: treść jest twoja, ruszam tylko gramatykę, formatowanie i martwe notatki. Zero em dashy.
+markdown## What I learned
 
-Your challenge is to build out this FX Checker currency app and get it looking as close to the design as possible.
+**Handling hydration issues**
 
-The app converts between currencies using live exchange rates, with a rate-history chart, a multi-currency comparison, pinned favorite pairs, and a running log of conversions. You can use any tools you like, so if there's something you've been wanting to practice, give it a go.
+The first feature I completed was the Converter. It needed to fetch a few things up front, like the list of currencies and the initial pair. I ran into hydration issues while trying to display that data, because I couldn't use the store inside `page.tsx`, which is a server component. I wrote a client component called `CurrencyHydrator` to call the store and populate it with the currency list.
 
-Your users should be able to:
+## Key decisions
 
-### Converter
+**Zustand over Context API**
 
-- Enter an amount to send and see it convert in real time as they type
-- Pick the "send" and "receive" currencies from a searchable currency picker
-- See the live exchange rate for the active pair (for example, `1 USD = 0.8530 EUR`)
-- Swap the send and receive currencies with the swap button
-- Favorite the active pair, and log a conversion to their history
+The app needed global state for the currency pair, favorites and the conversion log. Context re-renders every consumer whenever any part of the value changes, so a component reading only `pair` would re-render when `favorites` updated. Zustand lets each component subscribe to a slice. The `persist` middleware also covered localStorage for favorites and the conversion log without extra code, though it forced me to handle hydration mismatches by rehydrating manually after mount.
 
-### Currency picker
+**Trade-off:** an extra dependency for an app small enough that Context would have worked. I'd make the same call again. The selector-level subscriptions were worth it.
 
-- Search the full list of available currencies by code or name
-- See currencies grouped into "Popular" and "Other currencies", each row showing the flag, code, and name
-- See a check against the currency that's currently selected
+**What goes in the store**
 
-### Live markets ticker
+The rule I settled on: state shared across distant components goes in the store, state used by one component or its children stays local. I struggled with this for a long time before it clicked. The moment a feature like favorites started forcing me into prop drilling, I knew where it belonged.
 
-- See a ticker of currency pairs, each with its current rate and 24-hour change (up or down)
+**Converter hook and Zustand data separation**
 
-### Rate history
+After finishing the Converter section I started on the tab system, and immediately hit a wall: the tabs needed data that lived inside the Converter, specifically the active currency pair and the amount.
 
-- View a line and area chart of the active pair's rate over time
-- Switch the chart range between 1D, 1W, 1M, 3M, 1Y, and 5Y
-- See the open, last, absolute change, and percentage change for the selected range
+**Why:** two separate problems had grown together. All of the Converter state was local, so nothing outside it could read the pair or the amount. On top of that, the component mixed UI markup with calculation and formatting logic, which made it hard to read and harder to pull anything out of.
 
-### Compare
+**The fix:** I split the state by asking one question about each piece of data: am I going to use this anywhere else in the app? If yes, it went to the Zustand store. If not, it stayed local. That took a few iterations, but the rule made every case decidable instead of a judgment call.
 
-- See their send amount converted into a range of other currencies at once, each with its reference rate
-- Pin or unpin any comparison row to their favorites
+The tangled UI then became a separate concern. I extracted all the data handling into a custom hook and left the component to render what it returns, so each file has one reason to change.
 
-### Favorites
+## Engineering problems
 
-- See their pinned pairs, each with its live rate and 24-hour change
-- Load a pinned pair back into the converter by selecting its row
-- Unpin a pair they no longer want to track
+**viewBox vs px**
 
-### Conversion log
+The chart is rendered as SVG, with text elements as labels along the bottom and left. My first approach used a fixed viewBox base of 1000.
 
-- See a log of conversions they've made, each showing the relative time, the pair, and the send and receive amounts
-- Clear the whole log
-- Delete an individual entry
+**Why:** viewBox units are not pixels. The scale is `container width / viewBox width`. With a 300px container the scale was 0.3, so a font size of 10 rendered as 3px. On desktop the same value rendered as 10px. The units only equal pixels when you make them equal.
 
-### UI & accessibility
+**The fix:** a ResizeObserver that measures the container's real width and feeds it in as the viewBox width. The scale becomes 1, and one unit is one pixel. The height is never measured, only derived: `plotHeight = plotWidth / ratio`, with ratios taken from the design (1:1 mobile, 2.3:1 tablet, 3.5:1 desktop).
 
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
-- Navigate the entire app using only their keyboard
+**Focus outline built with a wrapper**
 
-### Data
+The design called for a focus outline offset 2px from the element. My approach: wrap the element in a `relative` container and add an absolutely positioned span with a negative inset. This broke every dropdown in the app, because each focusable element painted on top of them.
 
-There's no data file for this challenge. The exchange rates come from a live API, and the user's own data (favorites and conversion log) is saved in the browser.
+**Why:** `position: relative` makes an element positioned, and positioned elements paint above non-positioned ones in the same stacking context. That is CSS paint order, not a bug.
 
-We recommend the [Frankfurter API](https://frankfurter.dev/) for the rates. It's free, needs no API key, has no rate limits, is CORS-enabled, and is backed by the European Central Bank. A few endpoints cover everything in the design:
+**The fix:** `outline` with `outline-offset` directly on the element. Visually identical, takes no space in layout so there is no shift, and it creates no stacking context. My wrapper had been a manual reimplementation of a property that already existed.
 
-- `GET /v2/currencies` to populate the currency picker
-- `GET /v2/latest?base=USD` for the converter, ticker, and comparison rates
-- `GET /v2/latest?base=USD&symbols=EUR` for a lighter single-pair lookup
-- `GET /v2/{start}..{end}?base=USD&symbols=EUR` for the rate-history time series
+**Sunday NaN**
 
-You're free to use a different exchange-rate API if you prefer. Just note that the history chart needs time-series data, so check your chosen API supports it.
+While building a shared fetching function for the Ticker, Compare and Favorites features, I restructured the response object and forgot to handle the case where the data set is incomplete. It bit me on a Sunday: the Ticker was rendering `NaN` in both the rate and the change fields.
 
-### Saving favorites and the conversion log
+**Why:** on weekends and holidays the Frankfurter API returns no quotes, because it only publishes on trading days. My cross-rate function was receiving `undefined` for the missing day, and `NaN` propagated silently through every calculation downstream.
 
-A user's pinned pairs and their conversion log should persist across browser sessions. When they pin a pair or log a conversion, that change should still be there when they close and reopen the app. `localStorage` is a natural fit, since this app doesn't need user accounts. It's also a nice touch to remember the last tab they had open.
+**The fix:** I was asking the wrong question. I had been filtering for *the last N calendar days*, which returns nothing at all when those days are a weekend. What I actually wanted was *the last N trading sessions*. So I fetch with a 7-day buffer to cover holidays and long weekends, then take the tail of the response instead of filtering by date. The number of points on the chart is now deterministic and no longer depends on which holidays fall inside the range.
 
-### States to handle
+## Known limitations
 
-- **Empty favorites:** when nothing is pinned yet, show the prompt to pin a pair rather than an empty list
-- **Empty log:** when no conversions have been logged, show the prompt explaining that conversions are recorded automatically
-- **Empty comparison:** when the send amount is empty, prompt the user to enter an amount
-- **Chart error:** if the rate history can't load, show a friendly message rather than a broken chart
+**Currency input**
 
-### Accessibility
+1. **Formatting on blur.** Formatting only runs on the inactive input, which causes a problem: once the number is reformatted, it no longer passes the regex, and the user can't type in the second field. The only way out is to delete the whole number and start again.
 
-- Make sure keyboard navigation works for all interactive elements, including the currency pickers, the swap button, the tabs, the chart range controls, and the favorite and pin toggles
-- Provide visible focus styles. Dark interfaces hide weak focus rings, so these matter more than usual here
-- Use appropriate semantic HTML for the tabs, the lists of currencies and conversions, and the currency picker popover
-- Announce dynamic changes to screen readers, such as the converted amount updating, a pair being pinned, or a conversion being logged
+2. **Hover and focus states not matching the text width.** I tried several times to match the design, where the hover underline and the focus box hug the text. I learned about the `field-sizing` property, but every attempt caused a bad layout shift. I couldn't get it working in time.
 
-### Ideas to test yourself
+**Other limitations**
 
-- Add a light theme so users can switch between the dark-first design and a light alternative
-- Persist the active currency pair in the URL so a conversion can be bookmarked or shared
-- Add keyboard shortcuts so power users can focus the search, swap currencies, and switch the chart range without the mouse
-- Export the conversion log as a CSV file
-- Add a hover crosshair to the rate chart that shows the exact date and rate under the cursor
-- Cache the last successful rates and fall back to them with an out-of-date banner when the API is unreachable
-- Build as a full-stack app with accounts so a user's favorites and conversion log sync across devices
+1. `lib/helpers.ts` collects a lot of unrelated functions and should be split by responsibility.
 
-### Want some support on the challenge?
+2. Some components carry dense, tangled logic that made me lose my place in the code more than once. A refactor didn't fit in the time I had left.
 
-[Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+### Built with
 
-## Where to find everything
+- React.js - [React](https://reactjs.org/) 
+- Next.js - [Next.js](https://nextjs.org/) 
+- Typescript [Typescript](https://www.typescriptlang.org/docs/)
+- Tailwind CSS [TailwindCSS](https://tailwindcss.com/ )
+- Mobile-first workflow
+- Zustand [Zustand](https://zustand.docs.pmnd.rs/learn/getting-started/introduction)
+- Tanstack Query [TanstackQuery](https://tanstack.com/query/latest/docs/framework/react/overview)
+- Frankfurter API [Frankfurter](https://frankfurter.dev/)
+### AI Collaboration
 
-Your task is to build out the project to the Figma design file provided. During the hackathon, you can download the design for free on the platform. The design download comes with a `README.md` file to help you get set up. There are a couple of `.gitignore` files in this starter to keep the design files out of your repo, so please leave them in place.
+For this project I used Claude in the desktop app. Each time I started a new conversation I used the /learn skill to make the AI guide me towards an answer instead of handing me one. It pushed back on my decisions until I could justify them. I wrote every line of this codebase myself.
 
-All the required assets for this project are in the `/assets` folder. The icons and flags are already exported and optimized, and the logo is provided as an SVG. We also include the variable font file for JetBrains Mono. You can either link to Google Fonts or use the local font file to host the font yourself.
+This worked best on problems where I had the pieces but hadn't assembled them:
 
-The design system in the design file has all the details on the colors, fonts, spacing, and styles used in this project. Our fonts always come from [Google Fonts](https://fonts.google.com/).
+1. **calculateX / calculateY for the chart** - I knew what I had to do, but I couldn't get it into code.
+2. **TanStack Query key design** - I didn't fully grasp how to work with query keys; Claude explained the mental model clearly.
+3. **Zustand persist middleware** - a case of not knowing what I didn't know. Claude suggested `persist` instead of hand-rolling localStorage logic, since Zustand was already set up.
 
-The starter `index.html` already contains the static written content from the design, with comments marking where the dynamic, data-driven content goes. Building the HTML structure around it is part of the challenge.
+When something got genuinely complex and overwhelming, I switched approach and asked for explicit steps with explanations instead. Knowing when to stop wrestling and ask directly turned out to be its own skill.
 
-## Using AI coding assistants
+**What didn't work:** At certain points I leaned on the AI too much and stopped doing the thinking myself. I also had to push back when Claude confidently suggested things that were wrong - for example, when I needed the bounds of the SVG chart, it proposed calculations to derive them, when the values had been there all along: the highest and lowest rates *are* the Y bounds, and the first and last points *are* the X bounds.
 
-We've included two files to help you if you're using AI coding assistants (like Claude, GitHub Copilot, Cursor, etc.) while working on this challenge:
+## Author
 
-- `AGENTS.md` - Contains detailed instructions for AI assistants on how to help you with this challenge. It's tailored to this challenge's difficulty level, so the AI will provide guidance appropriate to your learning stage—offering more support for beginner challenges and encouraging more independence on advanced ones.
-- `CLAUDE.md` - A pointer file that directs Claude-based tools to the AGENTS.md instructions.
+Oscar ConstFormek
+- Website - [Github](https://github.com/constFormek)
+- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
+- Twitter - [@yourusername](https://www.twitter.com/yourusername)
 
-**How to use them:** You don't need to do anything! These files are automatically detected by most AI coding tools. The AI will read them and adjust its behavior to be a better learning partner—guiding you toward solutions rather than just giving you the answers.
 
-**Note:** These files are designed to help you *learn*, not to do the work for you. The AI is instructed to ask questions, give hints, and explain concepts rather than writing complete solutions.
 
-## Building your project
-
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
-
-1. Separate the `starter-code` from the rest of this project and rename it to something meaningful for you. Initialize the codebase as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/). **⚠️ IMPORTANT ⚠️: There are already a couple of `.gitignore` files in this project. Please do not remove them or change the content of the files. If you create a brand new project, please use the `.gitignore` files provided in your new codebase. This is to avoid the accidental upload of the design files to GitHub.**
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
-
-## Deploying your project
-
-As mentioned above, there are many ways to host your project for free. Our recommended hosts are:
-
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
-
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://www.frontendmentor.io/guides/hosting-your-solution).
-
-## Submitting your hackathon entry
-
-To enter, there are two steps:
-
-1. **Submit your solution on the Frontend Mentor platform.** This is required. It creates your solution page, with your live site and a link to your GitHub repo. Follow our ["Complete guide to submitting solutions"](https://www.frontendmentor.io/guides/how-to-submit-solutions) if you need a hand.
-2. **Share your solution-page URL** in the **#hackathon-submissions** channel on our [Discord community](https://www.frontendmentor.io/community), in the FX Checker thread. That link is your entry, since it points to both your live demo and your repo.
-
-Make sure your repo includes a complete README so the team and the community can understand what you built.
-
-If you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
-
-## Sharing your solution
-
-There are multiple places you can share your solution:
-
-1. Share your progress and your finished project with the **#FM30Hackathon** hashtag so we can find it and reshare our favorites.
-2. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community).
-3. Share on [X (formerly Twitter)](https://x.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in your post. We'd love to take a look at what you've built and help share it around.
-4. Share your solution on [LinkedIn](https://www.linkedin.com/company/frontend-mentor/).
-5. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
-
-## Got feedback for us?
-
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
-
-**Have fun building, and good luck in the hackathon!** 🚀
-
-
-TODO
-
-1. focus states 
-2. hover states
-3. responsivness
-4. accessibility + seo
-5. formatting (commas with thousand)
-6. favorite button
-7. log conversion button
-8. search system
-9. drop shadows

@@ -125,6 +125,9 @@ const CurrencySelector = ({
         e.preventDefault();
         closeListbox();
         break;
+      case "Tab":
+        closeListbox();
+        break;
       default:
         break;
     }
@@ -151,23 +154,25 @@ const CurrencySelector = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => (isOpen ? closeListbox() : setIsOpen(true))}
-        className="rounded-8 flex items-center gap-2 border border-neutral-400 bg-neutral-500 p-2.5"
+        className="peer rounded-8 flex shrink-0 cursor-pointer items-center gap-2 border border-neutral-400 bg-neutral-500 p-2.5 transition-colors outline-none hover:bg-neutral-400 focus-visible:outline-2"
       >
         <Image
-          className="rounded-full"
           src={selectedCurrency.flag}
           width={20}
           height={20}
-          alt={`${selectedCurrency.name}`}
+          alt=""
+          className="rounded-full"
         />
 
         <p className="text-preset-4">{currentCode}</p>
 
-        <Icon name="chevron-down" className="" size={24} />
+        <Icon name="chevron-down" className="" size={28} />
       </button>
 
+      <span className="rounded-10 pointer-events-none absolute -inset-0.75 peer-focus-visible:outline-2 peer-focus-visible:outline-lime-500" />
+
       <div
-        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-100 mt-2 flex max-h-122 flex-col gap-2.5 border border-neutral-400 bg-neutral-600 p-2 md:right-0 md:left-auto md:w-94`}
+        className={`${isOpen ? "absolute" : "hidden"} rounded-8 top-full -right-0.5 -left-0.5 z-50 mt-2 flex max-h-122 flex-col gap-2.5 border border-neutral-400 bg-neutral-600 p-2 drop-shadow-[0px_20px_60px_rgba(0,0,0,0.5)] md:right-0 md:left-auto md:w-94`}
       >
         <div className="rounded-6 flex items-center gap-2.5 border border-neutral-200 p-3">
           <Icon name="search" size={24} />
@@ -198,6 +203,7 @@ const CurrencySelector = ({
         </div>
 
         <div
+          tabIndex={-1}
           role="listbox"
           aria-label="Currencies"
           id={`${id}-listbox`}

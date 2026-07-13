@@ -32,6 +32,7 @@ const SelectorRow = ({
   return (
     <div
       role="option"
+      tabIndex={-1}
       aria-selected={currentCode === entry.iso_code}
       id={optionId(idPrefix, entry.iso_code)}
       ref={rowRef}
@@ -42,11 +43,11 @@ const SelectorRow = ({
     >
       <div className="flex items-center gap-3">
         <Image
-          className="rounded-full"
           src={entry.flag}
-          width={20}
-          height={20}
-          alt={``}
+          width={24}
+          height={24}
+          alt=""
+          className="rounded-full"
         />
 
         <p className="text-preset-4">{entry.iso_code}</p>
