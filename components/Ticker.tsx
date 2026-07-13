@@ -9,8 +9,8 @@ import ChangeIndicator from "./ChangeIndicator";
 const Ticker = () => {
   const { data, error, isPending } = useRates();
 
-  if (isPending) return <span>ŁADOWANIE</span>;
   if (error) return <span>BŁĄD</span>;
+  if (!data || isPending) return <TickerSkeleton />;
 
   const tickerArray = TICKER_PAIRS.map((entry) => {
     return {
@@ -52,6 +52,37 @@ const Ticker = () => {
               rate={tickerEntry.todaysRate}
               isCopy
             />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const TickerSkeleton = () => {
+  return (
+    <div
+      aria-hidden
+      className="text-preset-6 md:text-preset-5-medium flex items-center"
+    >
+      <div className="flex items-center gap-2 bg-lime-500 px-2 py-3 text-neutral-900 uppercase md:px-4 md:py-3">
+        <div className="aspect-square w-1.5 rounded-full bg-neutral-900"></div>
+
+        <p className="text-nowrap">LOADING...</p>
+      </div>
+
+      <div className="ticker-wrapper scrollbar-custom w-full overflow-hidden">
+        <div className="ticker-track flex w-max items-center">
+          {TICKER_PAIRS.map((p) => (
+            <div
+              key={p.base + p.quote}
+              className="flex items-center gap-2.5 border-r border-r-neutral-500 bg-neutral-700 p-3 md:px-4 md:py-3"
+            >
+              <p className="text-nowrap text-neutral-200 uppercase">
+                {p.base}/{p.quote}
+              </p>
+              <div className="h-4 w-16 animate-pulse rounded bg-neutral-600" />
+            </div>
           ))}
         </div>
       </div>

@@ -15,10 +15,9 @@ export type PeriodType = (typeof CHARTS_PERIODS)[number];
 const History = () => {
   const [activePeriod, setActivePeriod] = useState<PeriodType>("1m");
   const { data, error, isPending } = useRatesHistory(activePeriod);
-  const pair = useCurrencies((s) => s.pair);
 
-  if (isPending) return <span>ŁADOWANIE</span>;
-  if (error || !data)
+  const pair = useCurrencies((s) => s.pair);
+  if (error)
     return (
       <ErrorMessage
         label="No chart data available"
@@ -26,11 +25,17 @@ const History = () => {
       />
     );
 
+  const rates = data ?? [];
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="grid grid-cols-2 grid-rows-2 gap-2.5 md:grid-cols-4 md:grid-rows-1 md:items-center md:gap-4 lg:flex">
-          {data.length > 0 ? <HistoryStats data={data} /> : <HistoryStatsEmpty />}
+          {rates.length > 0 && !isPending ? (
+            <HistoryStats data={rates} />
+          ) : (
+            <HistoryStatsEmpty isPending={isPending} />
+          )}
         </div>
 
         <div className="rounded-8 flex items-center justify-between bg-neutral-700 p-0.5 md:w-fit">
@@ -48,7 +53,7 @@ const History = () => {
         </div>
       </div>
 
-      <Chart data={data} pair={pair} />
+      <Chart data={rates} pair={pair} isPending={isPending} />
     </div>
   );
 };

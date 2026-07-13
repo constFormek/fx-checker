@@ -27,10 +27,18 @@ interface ChartSvgProps {
     rate: number;
   }[];
   pair: Pair;
+  isPending: boolean;
   k?: number;
 }
 
-const ChartSvg = ({ chartWidth, ratio, data, pair, k = 3 }: ChartSvgProps) => {
+const ChartSvg = ({
+  chartWidth,
+  ratio,
+  data,
+  pair,
+  isPending,
+  k = 3,
+}: ChartSvgProps) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const chartDimensions = getChartDimensions(chartWidth, ratio);
@@ -89,7 +97,7 @@ const ChartSvg = ({ chartWidth, ratio, data, pair, k = 3 }: ChartSvgProps) => {
         aria-label={`rate ${pair.base}/${pair.quote}, ${formatChartDate(data[0].date)} - ${formatChartDate(data[lastIndex].date)}, from ${rateBounds.min.toFixed(4)} to ${rateBounds.max.toFixed(4)}`}
         tabIndex={0}
         viewBox={`0 0 ${chartWidth} ${chartDimensions.chartHeight}`}
-        className="focus-visible:rounded-8 h-auto w-full focus-visible:outline-2 focus-visible:outline-lime-500"
+        className={`${isPending ? "pointer-events-none opacity-10 transition-opacity" : "transition-opacity"} `}
       >
         <g transform={`translate(${LABEL_GAP + TEXT_WIDTH}, 0 )`}>
           <path d={areaString} fill="url(#chartFill)" stroke="none"></path>

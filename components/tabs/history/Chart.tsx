@@ -14,9 +14,10 @@ interface ChartProps {
     rate: number;
   }[];
   pair: Pair;
+  isPending: boolean;
 }
 
-const Chart = ({ data, pair }: ChartProps) => {
+const Chart = ({ data, pair, isPending }: ChartProps) => {
   const [chartWidth, setChartWidth] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,9 +37,19 @@ const Chart = ({ data, pair }: ChartProps) => {
   ).chartHeight;
 
   return (
-    <div className="rounded-16 flex flex-col gap-5 border border-neutral-600 bg-neutral-700 px-3 py-4">
+    <div className="rounded-16 relative flex flex-col gap-5 border border-neutral-600 bg-neutral-700 px-3 py-4">
+      {isPending && (
+        <div
+          aria-busy={isPending}
+          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
+        >
+          <div className="size-6 animate-spin rounded-full border-2 border-neutral-500 border-t-lime-500" />
+        </div>
+      )}
       {data.length > 0 && (
-        <div className="flex w-full justify-between">
+        <div
+          className={`${isPending ? "pointer-events-none opacity-30" : ""} flex w-full justify-between transition-opacity`}
+        >
           <h2 className="text-preset-3-medium">
             {pair.base}/{pair.quote}
           </h2>
@@ -65,14 +76,17 @@ const Chart = ({ data, pair }: ChartProps) => {
               pair={pair}
               chartWidth={chartWidth}
               data={data}
+              isPending={isPending}
               ratio={chartView.ratio}
             />
           ) : (
-            <ErrorMessage
-              label="No data for this range"
-              text="FX rates aren't published on weekends or holidays. Try a longer range."
-              className="flex h-full items-center justify-center"
-            />
+            !isPending && (
+              <ErrorMessage
+                label="No data for this range"
+                text="FX rates aren't published on weekends or holidays. Try a longer range."
+                className="flex h-full items-center justify-center"
+              />
+            )
           ))}
       </div>
     </div>

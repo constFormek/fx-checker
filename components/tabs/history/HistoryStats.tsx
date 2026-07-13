@@ -35,7 +35,7 @@ const HistoryStats = ({ data }: HistoryStatsProps) => {
           className={`${stylesMap[direction].color} text-preset-2 flex items-center`}
         >
           {stylesMap[direction].prefix}
-          {changeObject.change.toFixed(4)}
+          {Math.abs(Number(changeObject.change.toFixed(4)))}
         </span>
       ),
     },
