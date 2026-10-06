@@ -12,7 +12,6 @@ This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.
   - [Known Limitations](#known-limitations)
   - [AI Collaboration](#ai-collaboration)
 - [Author](#author)
-- [Acknowledgments](#acknowledgments)
 
 ### Screenshot
 
@@ -20,15 +19,12 @@ This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.
 
 ### Links
 
-- Solution URL: (https://your-solution-url.com)
+- Live Site URL: ([https://fx-checker-pkil.vercel.app/](https://fx-checker-pkil.vercel.app/))
 - Github Project (https://github.com/constFormek/fx-checker)
-- Live Site URL: (https://your-live-site-url.com)
 
 ## My process
 
-
-Jasne. Copyedit, nie przepisywanie: treść jest twoja, ruszam tylko gramatykę, formatowanie i martwe notatki. Zero em dashy.
-markdown## What I learned
+## What I learned
 
 **Handling hydration issues**
 
@@ -122,9 +118,7 @@ When something got genuinely complex and overwhelming, I switched approach and a
 
 ## Author
 
-Oscar ConstFormek
-- Website - [Fx Checker](https://fx-checker-pkil.vercel.app/)
-- Repository - [Github](https://github.com/constFormek)
+Oskar ConstFormek
 - Frontend Mentor - [@constFormek](https://www.frontendmentor.io/profile/constFormek)
 
 
