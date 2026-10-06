@@ -13,10 +13,6 @@ This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.
   - [AI Collaboration](#ai-collaboration)
 - [Author](#author)
 
-### Screenshot
-
-![](./screenshot.jpg)
-
 ### Links
 
 - Live Site URL: ([https://fx-checker-pkil.vercel.app/](https://fx-checker-pkil.vercel.app/))
