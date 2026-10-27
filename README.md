@@ -1,24 +1,19 @@
 # Frontend Mentor - FX Checker solution
 
-This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+This is a solution to the [FX Checker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter). 
 
 ## Table of contents
-  - [Screenshot](#screenshot)
-  - [Links](#links)
-- [My process](#my-process)
-  - [What I Learned](#what-i-learned)
-  - [Key Decisions](#key-decisions)
-  - [Engineering Problems](#engineering-problems)
-  - [Known Limitations](#known-limitations)
-  - [AI Collaboration](#ai-collaboration)
+- [Links](#links)
+- [What I Learned](#what-i-learned)
+- [Key Decisions](#key-decisions)
+- [Engineering Problems](#engineering-problems)
+- [Known Limitations](#known-limitations)
+- [AI Collaboration](#ai-collaboration)
 - [Author](#author)
 
-### Links
+### Live site
 
 - Live Site URL: ([https://fx-checker-pkil.vercel.app/](https://fx-checker-pkil.vercel.app/))
-- Github Project (https://github.com/constFormek/fx-checker)
-
-## My process
 
 ## What I learned
 
